@@ -1,4 +1,4 @@
-﻿ using UnityEngine;
+﻿using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -15,8 +15,10 @@ namespace StarterAssets
     public class ThirdPersonController : MonoBehaviour
     {
         [Header("Player")]
-        [Tooltip("Move speed of the character in m/s")]
-        public float MoveSpeed = 2.0f;
+        [Tooltip("Walk speed of the character in m/s")]
+        public float WalkSpeed = 2.0f;
+        [Tooltip("Jog speed of the character in m/s")]
+        public float JogSpeed = 2.0f;
 
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
@@ -72,7 +74,7 @@ namespace StarterAssets
         [Tooltip("Additional degress to override the camera. Useful for fine tuning camera position when locked")]
         public float CameraAngleOverride = 0.0f;
 
-        [Tooltip("For locking the camera position on all axis")]
+        [Tooltip("For locking the camera position on all axis ")]
         public bool LockCameraPosition = false;
 
         // cinemachine
@@ -117,7 +119,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
                 return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
-				return false;
+                return false;
 #endif
             }
         }
@@ -135,14 +137,14 @@ namespace StarterAssets
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
+
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
-#if ENABLE_INPUT_SYSTEM 
+#if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
 #else
-			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
+            Debug.LogError("Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 
             AssignAnimationIDs();
@@ -214,13 +216,14 @@ namespace StarterAssets
         private void Move()
         {
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            float targetSpeed;
 
-            // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
-
-            // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-            // if there is no input, set the target speed to 0
-            if (_input.move == Vector2.zero) targetSpeed = 0.0f;
+            if (_input.walk)                       // ← NEW:
+                targetSpeed = WalkSpeed;
+            else if (_input.sprint)
+                targetSpeed = SprintSpeed;
+            else
+                targetSpeed = (_input.move == Vector2.zero) ? 0.0f : JogSpeed;
 
             // a reference to the players current horizontal velocity
             float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
