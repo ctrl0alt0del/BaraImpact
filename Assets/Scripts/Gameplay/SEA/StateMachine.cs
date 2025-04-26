@@ -20,7 +20,7 @@ namespace SEA.State
 
   public class StateMachine : MonoBehaviour
   {
-    [SerializeField] private string initialState = "Idle";
+    [SerializeField] private string initialState = "Test";
     public string Current { get; private set; }
 
     private void Awake()
@@ -32,7 +32,7 @@ namespace SEA.State
     public void Goto(string next)
     {
       if (next == Current) return;
-
+      Debug.Log($"StateMachine.Goto() {gameObject.name} {Current} → {next}");
       GlobalEventBus.Publish(new ExitEvent(gameObject, Current));
       Current = next;
       GlobalEventBus.Publish(new EnterEvent(gameObject, Current));

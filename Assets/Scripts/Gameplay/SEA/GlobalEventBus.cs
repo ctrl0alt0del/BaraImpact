@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SEA.Events
 {
@@ -10,6 +11,7 @@ namespace SEA.Events
     public static void Publish<T>(T evt) where T : struct
     {
       if (!map.TryGetValue(typeof(T), out var list)) return;
+      Debug.Log($"GlobalEventBus.Publish() {typeof(T)} {list.Count} subscribers");
       for (int i = 0; i < list.Count; i++)
         ((Action<T>)list[i]).Invoke(evt);
     }
@@ -20,6 +22,7 @@ namespace SEA.Events
       if (!map.TryGetValue(type, out var list))
         map[type] = list = new List<Delegate>();
       if (!list.Contains(cb)) list.Add(cb);
+      Debug.Log($"GlobalEventBus.Subscribe() {type} {list.Count} subscribers");
     }
 
     public static void Unsubscribe<T>(Action<T> cb) where T : struct

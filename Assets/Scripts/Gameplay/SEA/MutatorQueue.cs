@@ -22,7 +22,6 @@ namespace SEA.Mutators
     public static void Tick()
     {
       StateMutator m;
-
       if (prio.Count > 0) m = prio.Dequeue();
       else if (fifo.Count > 0) m = fifo.Dequeue();
       else return; // nothing to do
@@ -35,9 +34,6 @@ namespace SEA.Mutators
       if (m.FromState != null && sm.Current != m.FromState) return;
 
       sm.Goto(m.ToState);              // fires Exit / Enter events
-
-      // Optional: broadcast that a mutator was consumed
-      GlobalEventBus.Publish(m);
     }
   }
 }

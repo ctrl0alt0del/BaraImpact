@@ -135,6 +135,15 @@ public partial class @GameInputAssets: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""BasicAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""a1d6badf-4bd7-4b39-a479-1146265e90da"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -324,6 +333,17 @@ public partial class @GameInputAssets: IInputActionCollection2, IDisposable
                     ""action"": ""Walk"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe6be131-0941-4e31-bfa2-726221665cbb"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";KeyboardMouse"",
+                    ""action"": ""BasicAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -385,6 +405,7 @@ public partial class @GameInputAssets: IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Walk = m_Player.FindAction("Walk", throwIfNotFound: true);
+        m_Player_BasicAttack = m_Player.FindAction("BasicAttack", throwIfNotFound: true);
     }
 
     ~@GameInputAssets()
@@ -470,6 +491,7 @@ public partial class @GameInputAssets: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Walk;
+    private readonly InputAction m_Player_BasicAttack;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -501,6 +523,10 @@ public partial class @GameInputAssets: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Walk".
         /// </summary>
         public InputAction @Walk => m_Wrapper.m_Player_Walk;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/BasicAttack".
+        /// </summary>
+        public InputAction @BasicAttack => m_Wrapper.m_Player_BasicAttack;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -542,6 +568,9 @@ public partial class @GameInputAssets: IInputActionCollection2, IDisposable
             @Walk.started += instance.OnWalk;
             @Walk.performed += instance.OnWalk;
             @Walk.canceled += instance.OnWalk;
+            @BasicAttack.started += instance.OnBasicAttack;
+            @BasicAttack.performed += instance.OnBasicAttack;
+            @BasicAttack.canceled += instance.OnBasicAttack;
         }
 
         /// <summary>
@@ -568,6 +597,9 @@ public partial class @GameInputAssets: IInputActionCollection2, IDisposable
             @Walk.started -= instance.OnWalk;
             @Walk.performed -= instance.OnWalk;
             @Walk.canceled -= instance.OnWalk;
+            @BasicAttack.started -= instance.OnBasicAttack;
+            @BasicAttack.performed -= instance.OnBasicAttack;
+            @BasicAttack.canceled -= instance.OnBasicAttack;
         }
 
         /// <summary>
@@ -695,5 +727,12 @@ public partial class @GameInputAssets: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnWalk(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "BasicAttack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnBasicAttack(InputAction.CallbackContext context);
     }
 }

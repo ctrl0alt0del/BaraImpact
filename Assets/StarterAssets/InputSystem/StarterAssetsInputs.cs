@@ -12,8 +12,8 @@ namespace StarterAssets
 		public Vector2 look;
 		public bool jump;
 		public bool sprint;
-
 		public bool walk;
+		public bool basicAttackPressed;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -49,6 +49,18 @@ namespace StarterAssets
 		public void OnWalk(InputValue value)
 		{
 			WalkInput(value.isPressed);
+		}
+		public void OnBasicAttack(InputValue value)
+		{
+				basicAttackPressed = value.isPressed;
+				if (value.isPressed && InputStateMachineBootstrap.Instance != null)
+				{
+						SEA.Mutators.MutatorQueue.Enqueue(
+								new SEA.Mutators.StateMutator(
+										InputStateMachineBootstrap.Instance.gameObject,
+										Game.States.InputStates.BasicAttack));
+						Debug.Log("BasicAttack mutator enqueued");
+				}
 		}
 #endif
 
