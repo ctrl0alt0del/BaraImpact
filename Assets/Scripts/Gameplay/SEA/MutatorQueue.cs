@@ -27,10 +27,8 @@ namespace SEA.Mutators
       else return; // nothing to do
 
       if (m.Target == null) return;
-
       var sm = m.Target.GetComponent<StateMachine>();
       if (sm == null) return;
-
       if (m.FromState != null && sm.Current != m.FromState) return;
 
       sm.Goto(m.ToState);              // fires Exit / Enter events

@@ -59,7 +59,6 @@ namespace StarterAssets
 								new SEA.Mutators.StateMutator(
 										InputStateMachineBootstrap.Instance.gameObject,
 										Game.States.InputStates.BasicAttack));
-						Debug.Log("BasicAttack mutator enqueued");
 				}
 		}
 #endif

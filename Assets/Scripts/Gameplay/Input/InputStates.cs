@@ -5,5 +5,7 @@ namespace Game.States
   {
     public const string Idle = "Idle";
     public const string BasicAttack = "BasicAttack";
+    public const string Skill = "Skill";
+    public const string Burst = "Burst";
   }
 }

@@ -31,8 +31,6 @@ namespace SEA.State
 
     public void Goto(string next)
     {
-      if (next == Current) return;
-      Debug.Log($"StateMachine.Goto() {gameObject.name} {Current} → {next}");
       GlobalEventBus.Publish(new ExitEvent(gameObject, Current));
       Current = next;
       GlobalEventBus.Publish(new EnterEvent(gameObject, Current));
