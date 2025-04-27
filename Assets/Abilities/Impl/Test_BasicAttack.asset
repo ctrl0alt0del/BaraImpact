@@ -32,5 +32,12 @@ MonoBehaviour:
   windup: 0.15
   active: 0.05
   recover: 0.25
-  animationClip: {fileID: 0}
-  hitboxPrefab: {fileID: 0}
+  animationClip: {fileID: -203655887218126122, guid: cf3dee591b32e1145881a26b67e7ffef, type: 3}
+  attackPrefab: {fileID: 3895010146851445032, guid: ebb4dd8153b7bf1449a5509318dd06fd, type: 3}
+  vfxPrefab: {fileID: 0}
+  kind: 0
+  range: 2
+  speed: 0
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 4294967295

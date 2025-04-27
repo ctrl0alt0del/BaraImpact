@@ -126,7 +126,10 @@ public class AbilityComponent : MonoBehaviour
   {
     Debug.Log($"Windup: {_pending.WindupTime} sec");
     if (_pending.AnimationClip)
-      _anim.Play(_pending.AnimationClip.name, 0, 0f);
+    {
+      Debug.Log($"Play animation: {_pending.AnimationClip.name}");
+      _anim.CrossFade(_pending.AnimationClip.name, 0.12f, 1);
+    }
 
     yield return new WaitForSeconds(_pending.WindupTime);
     MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.AbilityActive));
