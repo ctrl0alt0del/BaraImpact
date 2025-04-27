@@ -17,6 +17,7 @@ public class BasicAttackAbilitySO : AbstractAbilityScriptableObject, IGameplayAb
   [SerializeField] GameObject hitboxPrefab;
 
   public AbilitySlot Slot => AbilitySlot.BasicAttack;
+  public AbilityPriority Priority => AbilityPriority.Low;
 
   /*──── IGameplayAbilityData ────*/
   public bool CanPay(AbilitySystemCharacter asc) => true;    // always allowed

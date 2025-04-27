@@ -3,6 +3,7 @@ using Game.Abilities;
 public interface IGameplayAbilityData
 {
   AbilitySlot Slot { get; }
+  AbilityPriority Priority { get; }
   /* resource gating */
   bool CanPay(AbilitySystemCharacter asc);
   void PayCost(AbilitySystemCharacter asc);

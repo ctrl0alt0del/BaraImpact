@@ -20,7 +20,8 @@ public class AbilityComponent : MonoBehaviour
   StateMachine sm;
   Animator _anim;
 
-  IGameplayAbilityData _pending;     // generic!
+  IGameplayAbilityData _pending;
+  IGameplayAbilityData _active;
 
   void Awake()
   {
@@ -41,32 +42,51 @@ public class AbilityComponent : MonoBehaviour
   }
 
   /*──────── SEA pump ────────*/
+  /*───────────────────────────────────────────────────────────────*/
+  /*  AbilityComponent.cs  ―  slimmed-out HandleEnter()            */
+  /*───────────────────────────────────────────────────────────────*/
   void HandleEnter(EnterEvent evt)
   {
-    Debug.Log($"AbilityComponent.HandleEnter: {evt.State}");
-    /* INPUT machine */
-    AbilitySlot? inputSlot = evt.Target == InputStateMachineBootstrap.Instance?.gameObject
-                                 ? InputStateToSlot(evt.State)
-                                 : null;
-    if (InputStateMachineBootstrap.Instance &&
-        evt.Target == InputStateMachineBootstrap.Instance.gameObject &&
-        evt.State == InputStates.BasicAttack &&
-        _pending == null)
+    // 1️⃣ Did the INPUT state-machine fire?
+    if (IsInputEvent(evt))
     {
-      // find the BasicAttack asset among granted abilities
-      foreach (var ab in grantedAbilities)
-        if (ab is IGameplayAbilityData data)
-        { _pending = data; break; }
-
-      if (_pending != null)
-        MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.CostPayment));
-      return;
+      TryQueueAbilityForInput(evt.State);
+      return;                               // never let input fall through
     }
 
-    /* Unit’s own machine */
-    if (evt.Target != gameObject || _pending == null) return;
+    // 2️⃣ Is it this unit’s own SEA timeline event?
+    if (evt.Target == gameObject && _pending != null)
+      HandleUnitTimeline(evt.State);
+  }
 
-    switch (evt.State)
+  /*──────────────────────── helpers ─────────────────────────────*/
+
+  bool IsInputEvent(EnterEvent evt) =>
+      InputStateMachineBootstrap.Instance &&
+      evt.Target == InputStateMachineBootstrap.Instance.gameObject;
+
+  void TryQueueAbilityForInput(string inputState)
+  {
+    var slot = InputStateToSlot(inputState);
+    if (!slot.HasValue) return;
+
+    if (!slotToAbility.TryGetValue(slot.Value, out var ability)) return;
+
+    // Priority / spam guard
+    bool freeToStart = _pending == null;
+    bool canInterrupt = _active != null && ability.Priority > _active.Priority;
+
+    if (!freeToStart && !canInterrupt) return;
+
+    if (canInterrupt) _active = null;             // drop lower-prio move
+
+    _pending = ability;
+    MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.CostPayment));
+  }
+
+  void HandleUnitTimeline(string state)
+  {
+    switch (state)
     {
       case UnitStates.CostPayment: TryPayAndProceed(); break;
       case UnitStates.AbilityWindup: StartCoroutine(WindupRoutine()); break;
@@ -74,6 +94,7 @@ public class AbilityComponent : MonoBehaviour
       case UnitStates.AbilityRecover: StartCoroutine(RecoverRoutine()); break;
     }
   }
+
 
   static AbilitySlot? InputStateToSlot(string inputState)
   {
