@@ -14,5 +14,4 @@ public interface IGameplayAbilityData
   float RecoverTime { get; }
 
   UnityEngine.AnimationClip AnimationClip { get; }
-  UnityEngine.GameObject HitboxPrefab { get; }
 }

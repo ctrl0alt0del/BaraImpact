@@ -17,4 +17,10 @@ public class InputStateMachineBootstrap : MonoBehaviour
     _sm = GetComponent<StateMachine>();
     _sm.Goto(InputStates.Idle);   // start safely in Idle
   }
+
+  private void Update()
+  {
+    if (_sm.Current != InputStates.Idle)
+      _sm.Goto(InputStates.Idle);   // reset to Idle on every frame
+  }
 }

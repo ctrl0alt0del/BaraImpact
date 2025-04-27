@@ -3,9 +3,10 @@ using AbilitySystem;
 using AbilitySystem.Authoring;
 using System.Collections;
 using Game.Abilities;
+using Game.Combat;
 
 [CreateAssetMenu(menuName = "Gameplay Ability System/Abilities/Basic Attack")]
-public class BasicAttackAbilitySO : AbstractAbilityScriptableObject, IGameplayAbilityData
+public class BasicAttackAbilitySO : AbstractAbilityScriptableObject, IGameplayAbilityData, IAbilityDeliveryData, IVfxProvider
 {
   [Header("Timeline (sec)")]
   [SerializeField] float windup = 0.15f;
@@ -14,7 +15,15 @@ public class BasicAttackAbilitySO : AbstractAbilityScriptableObject, IGameplayAb
 
   [Header("Visuals")]
   [SerializeField] AnimationClip animationClip;
-  [SerializeField] GameObject hitboxPrefab;
+  [Header("Prefab")]
+  [SerializeField] GameObject attackPrefab;
+
+  [Header("Visuals")]
+  [SerializeField] GameObject vfxPrefab;
+  [SerializeField] AttackKind kind = AttackKind.Melee;
+  [SerializeField] float range = 2.0f;
+  [SerializeField] float speed = 0f;     // 0 for melee / hitscan
+  [SerializeField] LayerMask hitMask = ~0;   // default: hit everything
 
   public AbilitySlot Slot => AbilitySlot.BasicAttack;
   public AbilityPriority Priority => AbilityPriority.Low;
@@ -26,9 +35,14 @@ public class BasicAttackAbilitySO : AbstractAbilityScriptableObject, IGameplayAb
   public float WindupTime => windup;
   public float ActiveTime => active;
   public float RecoverTime => recover;
-
+  // designer set
+  public GameObject VfxPrefab => vfxPrefab;
   public AnimationClip AnimationClip => animationClip;
-  public GameObject HitboxPrefab => hitboxPrefab;
+  public GameObject AttackPrefab => attackPrefab;
+  public AttackKind Kind => kind;
+  public float Range => range;
+  public float Speed => speed;
+  public LayerMask HitMask => hitMask;
 
   /*──── GAS plumbing left empty (SEA drives the timeline) ────*/
   public override AbstractAbilitySpec CreateSpec(AbilitySystemCharacter owner)

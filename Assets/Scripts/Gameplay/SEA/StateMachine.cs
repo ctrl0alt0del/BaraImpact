@@ -33,6 +33,7 @@ namespace SEA.State
     {
       GlobalEventBus.Publish(new ExitEvent(gameObject, Current));
       Current = next;
+      Debug.Log($"StateMachine.Goto({next})");
       GlobalEventBus.Publish(new EnterEvent(gameObject, Current));
     }
   }

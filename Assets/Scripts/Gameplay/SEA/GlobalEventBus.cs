@@ -11,7 +11,6 @@ namespace SEA.Events
     public static void Publish<T>(T evt) where T : struct
     {
       if (!map.TryGetValue(typeof(T), out var list)) return;
-      Debug.Log($"GlobalEventBus.Publish() {typeof(T)} {list.Count} subscribers");
       for (int i = 0; i < list.Count; i++)
         ((Action<T>)list[i]).Invoke(evt);
     }

@@ -134,13 +134,8 @@ public class AbilityComponent : MonoBehaviour
 
   IEnumerator ActiveRoutine()
   {
-    if (_pending.HitboxPrefab)
-    {
-      var hb = Instantiate(_pending.HitboxPrefab,
-                           transform.position + transform.forward,
-                           transform.rotation, transform);
-      Destroy(hb, _pending.ActiveTime);
-    }
+    if (_pending is IAbilityDeliveryData delivery)
+      SpawnDelivery(delivery);
 
     yield return new WaitForSeconds(_pending.ActiveTime);
     MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.AbilityRecover));
@@ -149,7 +144,32 @@ public class AbilityComponent : MonoBehaviour
   IEnumerator RecoverRoutine()
   {
     yield return new WaitForSeconds(_pending.RecoverTime);
-    _pending = null;                       // clear lock
+    _pending = null;
+    _active = null;                      // clear lock
     MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.Idle));
+  }
+
+  void SpawnDelivery(IAbilityDeliveryData data)
+  {
+    var go = Instantiate(data.AttackPrefab,
+                         transform.position + transform.forward,
+                         transform.rotation);
+
+    var component = go.GetComponent<AttackInstanceComponent>();
+    if (!component)
+    {
+      Debug.LogError($"Prefab {data.AttackPrefab.name} missing AttackInstanceComponent");
+      Destroy(go);
+      return;
+    }
+
+    var vfx = (data is IVfxProvider v) ? v.VfxPrefab : null;
+
+    component.Init(data.Kind,
+               data.Range,
+               data.Speed,
+               vfx,
+               data.HitMask,
+               transform);
   }
 }
