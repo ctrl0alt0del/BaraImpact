@@ -1,66 +1,78 @@
+//-------------------------------------------------------------
+// AbilityComponent.cs   – version for h2v9696/UnityGAS
+//-------------------------------------------------------------
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Game.States;
-using SEA.State;        // EnterEvent / ExitEvent 🎟️  cite turn6view0
-using SEA.Mutators;     // StateMutator + queue      cite turn7view0 turn8view0
-using SEA.Events;       // GlobalEventBus
-using AbilitySystem.Authoring;
-using AbilitySystem;
-using Game.Abilities;   // AbilitySlot + IGameplayAbilityData
 
-/// Mount on any GameObject that has a StateMachine + Animator.
-[RequireComponent(typeof(StateMachine), typeof(Animator))]
+using SEA.State;                         // EnterEvent
+using SEA.Mutators;                      // StateMutator
+using SEA.Events;                        // GlobalEventBus
+
+using H2V.GameplayAbilitySystem.AbilitySystem.Components;          // AbilitySystemBehaviour
+using H2V.GameplayAbilitySystem.AbilitySystem.ScriptableObjects;   // AbilitySO<>
+
+using Game.States;
+using Game.Abilities;                    // AbilitySlot, IGameplayAbilityData
+using Game.Combat;                       // AttackInstanceComponent, IAbilityDeliveryData, IVfxProvider
+
+/// Mount on any GameObject that already has a StateMachine + Animator
+[RequireComponent(typeof(StateMachine), typeof(Animator), typeof(AbilitySystemBehaviour))]
 public class AbilityComponent : MonoBehaviour
 {
-  [SerializeField] AbstractAbilityScriptableObject[] grantedAbilities;
+  /* Designer-assigned list of ability assets (AbilitySO<…>) */
+  [SerializeField] AbilitySO[] grantedAbilities;
+
   readonly Dictionary<AbilitySlot, IGameplayAbilityData> slotToAbility
-         = new Dictionary<AbilitySlot, IGameplayAbilityData>();
-  AbilitySystemCharacter asc;
+      = new Dictionary<AbilitySlot, IGameplayAbilityData>();
+
+  AbilitySystemBehaviour asc;      // GAS runtime component
   StateMachine sm;
   Animator _anim;
 
   IGameplayAbilityData _pending;
   IGameplayAbilityData _active;
 
+  /*──────────────────────────────────────────────────────────*/
   void Awake()
   {
     sm = GetComponent<StateMachine>();
     _anim = GetComponent<Animator>();
-    asc = GetComponent<AbilitySystemCharacter>();
+    asc = GetComponent<AbilitySystemBehaviour>();
 
+    /* register every SO on this character */
     foreach (var so in grantedAbilities)
     {
       if (so is IGameplayAbilityData data)
       {
-        asc.GrantAbility(so.CreateSpec(asc));
-        slotToAbility[data.Slot] = data;
+        // AbilitySO already knows how to create its own Spec:
+        asc.GiveAbility(so);            // new GAS API
+
+        slotToAbility[data.Slot] = data;    // cache for quick lookup
       }
     }
 
     GlobalEventBus.Subscribe<EnterEvent>(HandleEnter);
   }
 
-  /*──────── SEA pump ────────*/
-  /*───────────────────────────────────────────────────────────────*/
-  /*  AbilityComponent.cs  ―  slimmed-out HandleEnter()            */
-  /*───────────────────────────────────────────────────────────────*/
+  /*──────────────────────────────────────────────────────────*/
+  /*                   EVENT ENTRY PUMP                       */
+  /*──────────────────────────────────────────────────────────*/
   void HandleEnter(EnterEvent evt)
   {
-    // 1️⃣ Did the INPUT state-machine fire?
+    /* 1️⃣ INPUT state-machine fired? */
     if (IsInputEvent(evt))
     {
       TryQueueAbilityForInput(evt.State);
-      return;                               // never let input fall through
+      return;                                 // stop bubbling
     }
 
-    // 2️⃣ Is it this unit’s own SEA timeline event?
+    /* 2️⃣ Unit’s own state timeline event */
     if (evt.Target == gameObject && _pending != null)
       HandleUnitTimeline(evt.State);
   }
 
-  /*──────────────────────── helpers ─────────────────────────────*/
-
+  /*──────── helpers ─────────────────────────────*/
   bool IsInputEvent(EnterEvent evt) =>
       InputStateMachineBootstrap.Instance &&
       evt.Target == InputStateMachineBootstrap.Instance.gameObject;
@@ -72,13 +84,13 @@ public class AbilityComponent : MonoBehaviour
 
     if (!slotToAbility.TryGetValue(slot.Value, out var ability)) return;
 
-    // Priority / spam guard
+    /* spam / priority guard */
     bool freeToStart = _pending == null;
     bool canInterrupt = _active != null && ability.Priority > _active.Priority;
 
     if (!freeToStart && !canInterrupt) return;
 
-    if (canInterrupt) _active = null;             // drop lower-prio move
+    if (canInterrupt) _active = null;
 
     _pending = ability;
     MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.CostPayment));
@@ -95,41 +107,35 @@ public class AbilityComponent : MonoBehaviour
     }
   }
 
-
-  static AbilitySlot? InputStateToSlot(string inputState)
+  static AbilitySlot? InputStateToSlot(string inputState) => inputState switch
   {
-    return inputState switch
-    {
-      InputStates.BasicAttack => AbilitySlot.BasicAttack,
-      InputStates.Skill => AbilitySlot.Skill,   // add in InputStates enum when you wire up
-      InputStates.Burst => AbilitySlot.Burst,
-      _ => null
-    };
-  }
+    InputStates.BasicAttack => AbilitySlot.BasicAttack,
+    InputStates.Skill => AbilitySlot.Skill,
+    InputStates.Burst => AbilitySlot.Burst,
+    _ => null
+  };
 
+  /*──────────────────────────────────────────────────────────*/
+  /*                        PHASES                            */
+  /*──────────────────────────────────────────────────────────*/
   void TryPayAndProceed()
   {
     if (!_pending.CanPay(asc))
     {
-      _pending = null;                                   // fail → idle
+      _pending = null;
       MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.Idle));
       return;
     }
 
-    _pending.PayCost(asc);                                 // deduct if needed
+    _pending.PayCost(asc);
     MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.AbilityWindup));
   }
 
-  /*──────────────────── Phase coroutines ───────────────────────*/
-
   IEnumerator WindupRoutine()
   {
-    Debug.Log($"Windup: {_pending.WindupTime} sec");
+    _active = _pending;                                   // lock priority
     if (_pending.AnimationClip)
-    {
-      Debug.Log($"Play animation: {_pending.AnimationClip.name}");
       _anim.CrossFade(_pending.AnimationClip.name, 0.12f, 1);
-    }
 
     yield return new WaitForSeconds(_pending.WindupTime);
     MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.AbilityActive));
@@ -148,18 +154,20 @@ public class AbilityComponent : MonoBehaviour
   {
     yield return new WaitForSeconds(_pending.RecoverTime);
     _pending = null;
-    _active = null;                      // clear lock
+    _active = null;
     MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.Idle));
   }
 
+  /*──────────────────────────────────────────────────────────*/
+  /*                DELIVERY SPAWNING                         */
+  /*──────────────────────────────────────────────────────────*/
   void SpawnDelivery(IAbilityDeliveryData data)
   {
     var go = Instantiate(data.AttackPrefab,
                          transform.position + transform.forward,
                          transform.rotation);
 
-    var component = go.GetComponent<AttackInstanceComponent>();
-    if (!component)
+    if (!go.TryGetComponent(out AttackInstanceComponent comp))
     {
       Debug.LogError($"Prefab {data.AttackPrefab.name} missing AttackInstanceComponent");
       Destroy(go);
@@ -168,11 +176,11 @@ public class AbilityComponent : MonoBehaviour
 
     var vfx = (data is IVfxProvider v) ? v.VfxPrefab : null;
 
-    component.Init(data.Kind,
-               data.Range,
-               data.Speed,
-               vfx,
-               data.HitMask,
-               transform);
+    comp.Init(data.Kind,
+              data.Range,
+              data.Speed,
+              vfx,
+              data.HitMask,
+              transform);
   }
 }

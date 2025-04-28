@@ -1,67 +1,67 @@
+//-------------------------------------------------------------
+// BasicAttackAbilitySO.cs   (re-targeted to h2v9696/UnityGAS)
+//-------------------------------------------------------------
 using UnityEngine;
-using AbilitySystem;
-using AbilitySystem.Authoring;
 using System.Collections;
-using Game.Abilities;
-using Game.Combat;
 
+/* ── GAS (h2v9696 fork) ─────────────────────────────────── */
+using H2V.GameplayAbilitySystem.AbilitySystem;
+using H2V.GameplayAbilitySystem.AbilitySystem.Components;          // AbilitySystemBehaviour
+using H2V.GameplayAbilitySystem.AbilitySystem.ScriptableObjects;   // AbilitySO<T>
+
+/* ── Your project-local contracts ─────────────────────────── */
+using Game.Abilities;   // IGameplayAbilityData, IAbilityDeliveryData, AbilitySlot, AbilityPriority
+using Game.Combat;      // AttackKind
+
+/*────────────────────────────────────────────────────────────*/
 [CreateAssetMenu(menuName = "Gameplay Ability System/Abilities/Basic Attack")]
-public class BasicAttackAbilitySO : AbstractAbilityScriptableObject, IGameplayAbilityData, IAbilityDeliveryData, IVfxProvider
+public sealed class BasicAttackAbilitySO
+        : AbilitySO<BasicAttackAbilitySO.BasicAttackSpec>,        // new GAS base-class
+          IGameplayAbilityData,
+          IAbilityDeliveryData,
+          IVfxProvider
 {
+  /*──────── Designer-tweaks ───────────────────────────────*/
   [Header("Timeline (sec)")]
-  [SerializeField] float windup = 0.15f;
-  [SerializeField] float active = 0.05f;
-  [SerializeField] float recover = 0.25f;
+  [SerializeField] private float windup = 0.15f;
+  [SerializeField] private float active = 0.05f;
+  [SerializeField] private float recover = 0.25f;
 
-  [Header("Visuals")]
-  [SerializeField] AnimationClip animationClip;
-  [Header("Prefab")]
-  [SerializeField] GameObject attackPrefab;
+  [Header("Visuals / Prefabs")]
+  [SerializeField] private AnimationClip animationClip;
+  [SerializeField] private GameObject attackPrefab;
+  [SerializeField] private GameObject vfxPrefab;
 
-  [Header("Visuals")]
-  [SerializeField] GameObject vfxPrefab;
-  [SerializeField] AttackKind kind = AttackKind.Melee;
-  [SerializeField] float range = 2.0f;
-  [SerializeField] float speed = 0f;     // 0 for melee / hitscan
-  [SerializeField] LayerMask hitMask = ~0;   // default: hit everything
+  [Header("Delivery")]
+  [SerializeField] private AttackKind kind = AttackKind.Melee;
+  [SerializeField] private float range = 2.0f;        // metres
+  [SerializeField] private float speed = 0f;          // 0 = melee / hitscan
+  [SerializeField] private LayerMask hitMask = ~0;         // default: hit everything
 
+  /*──────── IGameplayAbilityData ──────────────────────────*/
   public AbilitySlot Slot => AbilitySlot.BasicAttack;
   public AbilityPriority Priority => AbilityPriority.Low;
 
-  /*──── IGameplayAbilityData ────*/
-  public bool CanPay(AbilitySystemCharacter asc) => true;    // always allowed
-  public void PayCost(AbilitySystemCharacter asc) { }        // no cost
+  public bool CanPay(AbilitySystemBehaviour asc) => true;  // free
+  public void PayCost(AbilitySystemBehaviour asc) { }      // nothing to deduct
 
   public float WindupTime => windup;
   public float ActiveTime => active;
   public float RecoverTime => recover;
-  // designer set
-  public GameObject VfxPrefab => vfxPrefab;
   public AnimationClip AnimationClip => animationClip;
+
+  /*──────── IAbilityDeliveryData ──────────────────────────*/
   public GameObject AttackPrefab => attackPrefab;
   public AttackKind Kind => kind;
   public float Range => range;
   public float Speed => speed;
   public LayerMask HitMask => hitMask;
 
-  /*──── GAS plumbing left empty (SEA drives the timeline) ────*/
-  public override AbstractAbilitySpec CreateSpec(AbilitySystemCharacter owner)
-      => new BasicAttackSpec(this, owner);
+  /*──────── IVfxProvider ─────────────────────────────────*/
+  public GameObject VfxPrefab => vfxPrefab;
 
-  class BasicAttackSpec : AbstractAbilitySpec
+  /*──────── GAS spec - minimal stub (SEA drives logic) ──*/
+  public sealed class BasicAttackSpec : AbilitySpec
   {
-    public BasicAttackSpec(AbstractAbilityScriptableObject ability, AbilitySystemCharacter owner)
-        : base(ability, owner) { }
-    /* no tag requirements for a free basic attack */
-    public override bool CheckGameplayTags() => true;
-
-    /* nothing to prep — SEA starts the animation */
-    protected override IEnumerator PreActivate() => null;
-
-    /* nothing to cancel — but method must exist */
-    public override void CancelAbility() { }
-
-    /* SEA runs the timeline, so we’re done */
-    protected override IEnumerator ActivateAbility() { yield break; }
   }
 }

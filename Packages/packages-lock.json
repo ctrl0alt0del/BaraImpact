@@ -1,11 +1,44 @@
 {
   "dependencies": {
-    "com.sjai013.abilitysystem": {
-      "version": "https://github.com/sjai013/unity-gameplay-ability-system.git#upm",
+    "com.cysharp.unitask": {
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "7fb9a68132c325fe2d228ea8d9651915d1546cd9"
+      "hash": "06067cd4c83e372310d6f79d1c625f6870ff7a2a"
+    },
+    "com.h2v.extensions-core": {
+      "version": "https://github.com/h2v9696/UnityExtensionsCore.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.cysharp.unitask": "2.5.0",
+        "com.unity.addressables": "1.21.19"
+      },
+      "hash": "1bf65c31518430710158ec03c78b7c8b1739381e"
+    },
+    "com.mackysoft.serializereference-extensions": {
+      "version": "https://github.com/mackysoft/Unity-SerializeReferenceExtensions.git?path=Assets/MackySoft/MackySoft.SerializeReferenceExtensions",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f938fc5d9a9ef46a1669289450d38e17cb39567c"
+    },
+    "com.unity.addressables": {
+      "version": "2.4.3",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.profiling.core": "1.0.2",
+        "com.unity.test-framework": "1.4.5",
+        "com.unity.modules.assetbundle": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.scriptablebuildpipeline": "2.3.2",
+        "com.unity.modules.unitywebrequestassetbundle": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.ai.navigation": {
       "version": "2.0.7",
@@ -119,6 +152,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.profiling.core": {
+      "version": "1.0.2",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.render-pipelines.core": {
       "version": "17.0.4",
       "depth": 0,
@@ -161,6 +201,16 @@
         "com.unity.mathematics": "1.2.4",
         "com.unity.modules.terrain": "1.0.0"
       }
+    },
+    "com.unity.scriptablebuildpipeline": {
+      "version": "2.3.2",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.test-framework": "1.4.5",
+        "com.unity.modules.assetbundle": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.searcher": {
       "version": "4.9.3",
@@ -246,6 +296,16 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "h2v.gameplay-ability-system": {
+      "version": "https://github.com/h2v9696/UnityGAS.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.mackysoft.serializereference-extensions": "1.1.9",
+        "com.h2v.extensions-core": "0.0.1"
+      },
+      "hash": "be864bdc3eccea8fc7b1379b3d2cb7c4d235b643"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
