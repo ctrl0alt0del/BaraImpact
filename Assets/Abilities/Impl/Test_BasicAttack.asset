@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed0fbb9f8962bbf41b081e9381a9d4d4, type: 3}
   m_Name: Test_BasicAttack
   m_EditorClassIdentifier: 
-  AbilityName: 
-  AbilityTags:
-    AssetTag: {fileID: 0}
-    CancelAbilitiesWithTags: []
-    BlockAbilitiesWithTags: []
-    ActivationOwnedTags: []
+  <Tags>k__BackingField:
+    AbilityTag: {fileID: 0}
+    CancelAbilityWithTags: []
+    BlockAbilityWithTags: []
+    ActivationTags: []
     OwnerTags:
       RequireTags: []
       IgnoreTags: []
@@ -27,12 +26,12 @@ MonoBehaviour:
     TargetTags:
       RequireTags: []
       IgnoreTags: []
-  Cost: {fileID: 0}
-  Cooldown: {fileID: 0}
+  <Contexts>k__BackingField: []
+  <Conditions>k__BackingField: []
   windup: 0.15
   active: 0.05
   recover: 0.25
-  animationClip: {fileID: -203655887218126122, guid: cf3dee591b32e1145881a26b67e7ffef, type: 3}
+  animationClip: {fileID: -203655887218126122, guid: 4865ede40b874434cab95bbfb404fce1, type: 3}
   attackPrefab: {fileID: 3895010146851445032, guid: ebb4dd8153b7bf1449a5509318dd06fd, type: 3}
   vfxPrefab: {fileID: 0}
   kind: 0
@@ -41,3 +40,6 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  references:
+    version: 2
+    RefIds: []
