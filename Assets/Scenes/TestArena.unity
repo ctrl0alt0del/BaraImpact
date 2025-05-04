@@ -2707,9 +2707,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e54e5a728a9234ab24fcf1460ed8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WalkSpeed: 2
-  JogSpeed: 5
-  SprintSpeed: 8
+  walkSpeedAttr: {fileID: 11400000, guid: d0859770d4ec480498da2a7cde05002e, type: 2}
+  jogSpeedAttr: {fileID: 11400000, guid: c39e7520002cdaf4bb63666b894e8191, type: 2}
+  sprintSpeedAttr: {fileID: 11400000, guid: f54f81548a99a9e4d98576d05b18b194, type: 2}
   RotationSmoothTime: 0.12
   SpeedChangeRate: 10
   LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
@@ -2785,6 +2785,8 @@ GameObject:
   - component: {fileID: 1683201457}
   - component: {fileID: 1683201471}
   - component: {fileID: 1683201470}
+  - component: {fileID: 6982812147307579056}
+  - component: {fileID: 6982812147307579057}
   m_Layer: 8
   m_Name: CustomPlayer
   m_TagString: Player
@@ -3358,6 +3360,87 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6982812147307579056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926082897315439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f34bcc6a2416b3840997490b586fc042, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _initOnAwake: 1
+  _attributeEvents: []
+  _attributes:
+  - {fileID: 11400000, guid: c39e7520002cdaf4bb63666b894e8191, type: 2}
+  - {fileID: 11400000, guid: f54f81548a99a9e4d98576d05b18b194, type: 2}
+  - {fileID: 11400000, guid: d0859770d4ec480498da2a7cde05002e, type: 2}
+  _attributeValues:
+  - <Attribute>k__BackingField: {fileID: 11400000, guid: c39e7520002cdaf4bb63666b894e8191, type: 2}
+    <BaseValue>k__BackingField: 5
+    <CurrentValue>k__BackingField: 0
+    ExternalModifier:
+      Additive: 0
+      Multiplicative: 0
+      Overriding: 0
+    CoreModifier:
+      Additive: 0
+      Multiplicative: 0
+      Overriding: 0
+  - <Attribute>k__BackingField: {fileID: 11400000, guid: f54f81548a99a9e4d98576d05b18b194, type: 2}
+    <BaseValue>k__BackingField: 8
+    <CurrentValue>k__BackingField: 0
+    ExternalModifier:
+      Additive: 0
+      Multiplicative: 0
+      Overriding: 0
+    CoreModifier:
+      Additive: 0
+      Multiplicative: 0
+      Overriding: 0
+  - <Attribute>k__BackingField: {fileID: 11400000, guid: d0859770d4ec480498da2a7cde05002e, type: 2}
+    <BaseValue>k__BackingField: 2
+    <CurrentValue>k__BackingField: 0
+    ExternalModifier:
+      Additive: 0
+      Multiplicative: 0
+      Overriding: 0
+    CoreModifier:
+      Additive: 0
+      Multiplicative: 0
+      Overriding: 0
+--- !u!114 &6982812147307579057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926082897315439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3499ed083646a35409c85a9726dc7724, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attributeSystem: {fileID: 6982812147307579056}
+  _initOnStart: 0
+  _statsProvider:
+    rid: 2796831135706906707
+  references:
+    version: 2
+    RefIds:
+    - rid: 2796831135706906707
+      type: {class: InlineStatsProvider, ns: H2V.GameplayAbilitySystem.AttributeSystem.Components, asm: H2V.GameplayAbilitySystem}
+      data:
+        <Stats>k__BackingField:
+        - Attribute: {fileID: 11400000, guid: c39e7520002cdaf4bb63666b894e8191, type: 2}
+          Value: 5
+        - Attribute: {fileID: 11400000, guid: f54f81548a99a9e4d98576d05b18b194, type: 2}
+          Value: 8
+        - Attribute: {fileID: 11400000, guid: d0859770d4ec480498da2a7cde05002e, type: 2}
+          Value: 2
 --- !u!4 &6983258930950323830
 Transform:
   m_ObjectHideFlags: 0

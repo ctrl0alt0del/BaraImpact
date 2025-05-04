@@ -2,6 +2,9 @@
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
+using H2V.GameplayAbilitySystem.AttributeSystem.Components;
+using H2V.GameplayAbilitySystem.AttributeSystem.ScriptableObjects;
+using H2V.GameplayAbilitySystem.AttributeSystem;
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
@@ -15,13 +18,10 @@ namespace StarterAssets
     public class ThirdPersonController : MonoBehaviour
     {
         [Header("Player")]
-        [Tooltip("Walk speed of the character in m/s")]
-        public float WalkSpeed = 2.0f;
-        [Tooltip("Jog speed of the character in m/s")]
-        public float JogSpeed = 2.0f;
-
-        [Tooltip("Sprint speed of the character in m/s")]
-        public float SprintSpeed = 5.335f;
+        [Header("Speed AttributeSOs")]
+        [SerializeField] private AttributeSO walkSpeedAttr;
+        [SerializeField] private AttributeSO jogSpeedAttr;
+        [SerializeField] private AttributeSO sprintSpeedAttr;
 
         [Tooltip("How fast the character turns to face movement direction")]
         [Range(0.0f, 0.3f)]
@@ -107,6 +107,8 @@ namespace StarterAssets
         private CharacterController _controller;
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
+        AttributeSystemBehaviour asc;
+        AttributeSO walkAttr, jogAttr, sprintAttr;
 
         private const float _threshold = 0.01f;
 
@@ -141,6 +143,8 @@ namespace StarterAssets
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
+            asc = GetComponent<AttributeSystemBehaviour>();
+
 #if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
 #else
@@ -216,14 +220,7 @@ namespace StarterAssets
         private void Move()
         {
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed;
-
-            if (_input.walk)                       // ← NEW:
-                targetSpeed = WalkSpeed;
-            else if (_input.sprint)
-                targetSpeed = SprintSpeed;
-            else
-                targetSpeed = (_input.move == Vector2.zero) ? 0.0f : JogSpeed;
+            float targetSpeed = ResolveTargetSpeed();
 
             // a reference to the players current horizontal velocity
             float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
@@ -390,6 +387,23 @@ namespace StarterAssets
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
+        }
+
+        private float ResolveTargetSpeed()
+        {
+            if (_input.sprint && asc.TryGetAttributeValue(sprintAttr, out AttributeValue sprint))
+                return sprint.CurrentValue;
+
+            if (_input.walk && asc.TryGetAttributeValue(walkAttr, out AttributeValue walk))
+                return walk.CurrentValue;
+
+            if (_input.move == Vector2.zero) return 0f;
+
+            if (asc.TryGetAttributeValue(jogAttr, out AttributeValue jog))
+                return jog.CurrentValue;
+
+            // If attributes not yet installed, hard-fallback to sane default.
+            return 0f;
         }
     }
 }
