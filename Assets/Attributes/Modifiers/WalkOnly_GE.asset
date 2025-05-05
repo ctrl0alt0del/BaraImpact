@@ -9,32 +9,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36fd283322353ff42b30cd679073251e, type: 3}
+  m_Script: {fileID: 11500000, guid: bffd989f578481342b953360f84c5b93, type: 3}
   m_Name: WalkOnly_GE
   m_EditorClassIdentifier: 
-  gameplayEffect:
-    DurationPolicy: 0
-    DurationModifier: {fileID: 0}
-    DurationMultiplier: 0
+  <Description>k__BackingField: 
+  <EffectTag>k__BackingField: {fileID: 0}
+  <Policy>k__BackingField:
+    rid: 2796831158115237959
+  <EffectDetails>k__BackingField:
     Modifiers:
-    - Attribute: {fileID: 0}
-      ModifierOperator: 0
-      ModifierMagnitude: {fileID: 0}
-      Multiplier: 0
-    ConditionalGameplayEffects: []
-  gameplayEffectTags:
-    AssetTag: {fileID: 0}
-    GrantedTags: []
-    OngoingTagRequirements:
-      RequireTags: []
-      IgnoreTags: []
-    ApplicationTagRequirements:
-      RequireTags: []
-      IgnoreTags: []
-    RemovalTagRequirements:
-      RequireTags: []
-      IgnoreTags: []
-    RemoveGameplayEffectsWithTag: []
-  Period:
-    Period: 0
-    ExecuteOnApplication: 0
+    - Attribute: {fileID: 11400000, guid: c39e7520002cdaf4bb63666b894e8191, type: 2}
+      OperationType: 3
+      ModifierMagnitude: {fileID: 11400000, guid: 7cb19b0cf60c5be4dab684a1710466ad, type: 2}
+      Value: 0
+    - Attribute: {fileID: 11400000, guid: f54f81548a99a9e4d98576d05b18b194, type: 2}
+      OperationType: 3
+      ModifierMagnitude: {fileID: 11400000, guid: 7cb19b0cf60c5be4dab684a1710466ad, type: 2}
+      Value: 0
+    StackingType: 1
+  <AdditionApplyEffects>k__BackingField: []
+  <CustomExecutions>k__BackingField: []
+  <ApplicationConditions>k__BackingField: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2796831158115237959
+      type: {class: InfinitePolicy, ns: H2V.GameplayAbilitySystem.EffectSystem.GamplayEffectPolicies, asm: H2V.GameplayAbilitySystem}
+      data:
+        <StackPerActive>k__BackingField: 1
+        <ReduceStackStrategy>k__BackingField:
+          rid: 2796831158115237960
+    - rid: 2796831158115237960
+      type: {class: ReduceSingleStack, ns: H2V.GameplayAbilitySystem.EffectSystem.GamplayEffectPolicies, asm: H2V.GameplayAbilitySystem}
+      data: 

@@ -14,7 +14,7 @@ using Game.Abilities;   // IGameplayAbilityData, IAbilityDeliveryData, AbilitySl
 using Game.Combat;      // AttackKind
 
 /*────────────────────────────────────────────────────────────*/
-[CreateAssetMenu(menuName = "Gameplay Ability System/Abilities/Basic Attack")]
+[CreateAssetMenu(menuName = "Bara Impact/Abilities/Basic Attack")]
 public sealed class BasicAttackAbilitySO
         : AbilitySO<BasicAttackAbilitySO.BasicAttackSpec>,        // new GAS base-class
           IGameplayAbilityData,

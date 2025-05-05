@@ -19,9 +19,9 @@ namespace StarterAssets
     {
         [Header("Player")]
         [Header("Speed AttributeSOs")]
-        [SerializeField] private AttributeSO walkSpeedAttr;
-        [SerializeField] private AttributeSO jogSpeedAttr;
-        [SerializeField] private AttributeSO sprintSpeedAttr;
+        public AttributeSO walkSpeedAttr;
+        public AttributeSO jogSpeedAttr;
+        public AttributeSO sprintSpeedAttr;
 
         [Tooltip("How fast the character turns to face movement direction")]
         [Range(0.0f, 0.3f)]
@@ -108,7 +108,6 @@ namespace StarterAssets
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
         AttributeSystemBehaviour asc;
-        AttributeSO walkAttr, jogAttr, sprintAttr;
 
         private const float _threshold = 0.01f;
 
@@ -134,6 +133,10 @@ namespace StarterAssets
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
+
+            Debug.Assert(walkSpeedAttr != null, $"WalkSpeed attr missing on {name}");
+            Debug.Assert(jogSpeedAttr, $"JogSpeed attr missing on {name}");
+            Debug.Assert(sprintSpeedAttr, $"SprintSpeed attr missing on {name}");
         }
 
         private void Start()
@@ -391,15 +394,16 @@ namespace StarterAssets
 
         private float ResolveTargetSpeed()
         {
-            if (_input.sprint && asc.TryGetAttributeValue(sprintAttr, out AttributeValue sprint))
+
+            if (_input.sprint && asc.TryGetAttributeValue(sprintSpeedAttr, out AttributeValue sprint))
                 return sprint.CurrentValue;
 
-            if (_input.walk && asc.TryGetAttributeValue(walkAttr, out AttributeValue walk))
+            if (_input.walk && asc.TryGetAttributeValue(walkSpeedAttr, out AttributeValue walk))
                 return walk.CurrentValue;
 
             if (_input.move == Vector2.zero) return 0f;
 
-            if (asc.TryGetAttributeValue(jogAttr, out AttributeValue jog))
+            if (asc.TryGetAttributeValue(jogSpeedAttr, out AttributeValue jog))
                 return jog.CurrentValue;
 
             // If attributes not yet installed, hard-fallback to sane default.

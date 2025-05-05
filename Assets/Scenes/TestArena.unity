@@ -1285,6 +1285,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grantedAbilities:
   - {fileID: 11400000, guid: 0e7815a5e80a09444abd78912cdd1e95, type: 2}
+  walkOnlyEffect: {fileID: 11400000, guid: fa47d172abe01a94a926a941a64ee094, type: 2}
 --- !u!114 &1683201458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2776,17 +2777,21 @@ GameObject:
   - component: {fileID: 3893294198856670421}
   - component: {fileID: 6982812147307579055}
   - component: {fileID: 4416926082897315429}
+  - component: {fileID: 6982812147307579056}
+  - component: {fileID: 6982812147307579057}
   - component: {fileID: 4416926082897315428}
   - component: {fileID: 5885216828920917151}
   - component: {fileID: 135756640821860883}
   - component: {fileID: 4416926082897315427}
   - component: {fileID: 1683201452}
   - component: {fileID: 1683201458}
+  - component: {fileID: 6982812147307579061}
   - component: {fileID: 1683201457}
   - component: {fileID: 1683201471}
   - component: {fileID: 1683201470}
-  - component: {fileID: 6982812147307579056}
-  - component: {fileID: 6982812147307579057}
+  - component: {fileID: 6982812147307579060}
+  - component: {fileID: 6982812147307579059}
+  - component: {fileID: 6982812147307579058}
   m_Layer: 8
   m_Name: CustomPlayer
   m_TagString: Player
@@ -3425,7 +3430,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _attributeSystem: {fileID: 6982812147307579056}
-  _initOnStart: 0
+  _initOnStart: 1
   _statsProvider:
     rid: 2796831135706906707
   references:
@@ -3441,6 +3446,60 @@ MonoBehaviour:
           Value: 8
         - Attribute: {fileID: 11400000, guid: d0859770d4ec480498da2a7cde05002e, type: 2}
           Value: 2
+--- !u!114 &6982812147307579058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926082897315439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe7075c3a4c4a014b9f1ada22627ec6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6982812147307579059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926082897315439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b598d8baa1d334e43a82ce02846bd3a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <TagSystem>k__BackingField: {fileID: 1683201471}
+  <AbilitySystem>k__BackingField: {fileID: 1683201470}
+  <AttributeSystem>k__BackingField: {fileID: 6982812147307579056}
+  <GameplayEffectSystem>k__BackingField: {fileID: 6982812147307579060}
+--- !u!114 &6982812147307579060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926082897315439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c75b14c70ffcf7a40bb793a2eeb475a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useUpdate: 1
+  _effectExecuteEvents: []
+--- !u!114 &6982812147307579061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926082897315439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 366e26f93f3f06a4e90b3213537f517b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6983258930950323830
 Transform:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 using SEA.State;                         // EnterEvent
 using SEA.Mutators;                      // StateMutator
@@ -11,6 +12,8 @@ using SEA.Events;                        // GlobalEventBus
 
 using H2V.GameplayAbilitySystem.AbilitySystem.Components;          // AbilitySystemBehaviour
 using H2V.GameplayAbilitySystem.AbilitySystem.ScriptableObjects;   // AbilitySO<>
+using H2V.GameplayAbilitySystem.EffectSystem.ScriptableObjects;
+using H2V.GameplayAbilitySystem.EffectSystem;                     // IEffectApplier, GameplayEffectSpec
 
 using Game.States;
 using Game.Abilities;                    // AbilitySlot, IGameplayAbilityData
@@ -22,6 +25,10 @@ public class AbilityComponent : MonoBehaviour
 {
   /* Designer-assigned list of ability assets (AbilitySO<…>) */
   [SerializeField] AbilitySO[] grantedAbilities;
+  [Header("Speed-cap GameplayEffect")]
+  [SerializeField] private GameplayEffectSO walkOnlyEffect;
+  IEffectApplier effects;
+  [NonSerialized] GameplayEffectSpec walkCapSpec;
 
   readonly Dictionary<AbilitySlot, IGameplayAbilityData> slotToAbility
       = new Dictionary<AbilitySlot, IGameplayAbilityData>();
@@ -39,6 +46,7 @@ public class AbilityComponent : MonoBehaviour
     sm = GetComponent<StateMachine>();
     _anim = GetComponent<Animator>();
     asc = GetComponent<AbilitySystemBehaviour>();
+    effects = GetComponent<IEffectApplier>();
 
     /* register every SO on this character */
     foreach (var so in grantedAbilities)
@@ -136,6 +144,9 @@ public class AbilityComponent : MonoBehaviour
     _active = _pending;                                   // lock priority
     if (_pending.AnimationClip)
       _anim.CrossFade(_pending.AnimationClip.name, 0.12f, 1);
+    Debug.Assert(walkOnlyEffect != null, "walkOnlyEffect is null!");
+    if (walkOnlyEffect && walkCapSpec == null)
+      walkCapSpec = effects.Apply(walkOnlyEffect);
 
     yield return new WaitForSeconds(_pending.WindupTime);
     MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.AbilityActive));
@@ -155,6 +166,8 @@ public class AbilityComponent : MonoBehaviour
     yield return new WaitForSeconds(_pending.RecoverTime);
     _pending = null;
     _active = null;
+    effects.Remove(walkCapSpec);
+    walkCapSpec = null;
     MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.Idle));
   }
 
