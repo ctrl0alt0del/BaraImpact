@@ -171,14 +171,14 @@ public class AbilityComponent : MonoBehaviour
     MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.Idle));
   }
 
-  /*──────────────────────────────────────────────────────────*/
-  /*                DELIVERY SPAWNING                         */
-  /*──────────────────────────────────────────────────────────*/
   void SpawnDelivery(IAbilityDeliveryData data)
   {
-    var go = Instantiate(data.AttackPrefab,
-                         transform.position + transform.forward,
-                         transform.rotation);
+    // ── resolve spawn position / direction ─────────────
+    (Vector3 pos, Vector3 dir) = ResolveSpawnPoint(data);
+
+    // ── instantiate & orient projectile ────────────────
+    GameObject go = Instantiate(data.AttackPrefab);
+    go.transform.SetPositionAndRotation(pos, Quaternion.LookRotation(dir));
 
     if (!go.TryGetComponent(out AttackInstanceComponent comp))
     {
@@ -187,7 +187,7 @@ public class AbilityComponent : MonoBehaviour
       return;
     }
 
-    var vfx = (data is IVfxProvider v) ? v.VfxPrefab : null;
+    GameObject vfx = (data as IVfxProvider)?.VfxPrefab;
 
     comp.Init(data.Kind,
               data.Range,
@@ -195,5 +195,40 @@ public class AbilityComponent : MonoBehaviour
               vfx,
               data.HitMask,
               transform);
+    go.layer = LayerMask.NameToLayer("Projectile");
+
   }
+
+  (Vector3 pos, Vector3 dir) ResolveSpawnPoint(IAbilityDeliveryData data)
+  {
+    const float fallbackHeight = 1.3f;
+    const float forwardOffset = 0.3f;
+
+    // default chest-level launch straight ahead
+    Vector3 baseDir = transform.forward;
+    Vector3 basePos = transform.position + Vector3.up * fallbackHeight + baseDir * forwardOffset;
+
+    if (data is not IHasSpawnOrigin origin || string.IsNullOrEmpty(origin.SpawnBone))
+      return (basePos, baseDir);
+
+    // try Animator humanoid bone
+    Animator anim = GetComponent<Animator>();
+    Transform boneT = anim.GetBoneTransformByName(origin.SpawnBone);
+
+    // fallback: named child
+    if (boneT == null)
+      boneT = transform.Find(origin.SpawnBone);
+
+    if (boneT == null)
+    {
+      Debug.LogWarning($"Spawn bone \"{origin.SpawnBone}\" not found; using default point.");
+      return (basePos, baseDir);
+    }
+
+    Vector3 dir = transform.forward;
+    Vector3 pos = boneT.position + boneT.TransformVector(origin.SpawnOffset);
+    Debug.DrawRay(pos, dir * 0.2f, Color.cyan, 0.5f);
+    return (pos, dir);
+  }
+
 }

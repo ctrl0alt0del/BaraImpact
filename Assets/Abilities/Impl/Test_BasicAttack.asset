@@ -28,18 +28,20 @@ MonoBehaviour:
       IgnoreTags: []
   <Contexts>k__BackingField: []
   <Conditions>k__BackingField: []
-  windup: 0.15
+  windup: 1
   active: 0.05
   recover: 0.25
   animationClip: {fileID: -203655887218126122, guid: 4865ede40b874434cab95bbfb404fce1, type: 3}
   attackPrefab: {fileID: 3895010146851445032, guid: ebb4dd8153b7bf1449a5509318dd06fd, type: 3}
-  vfxPrefab: {fileID: 0}
-  kind: 0
-  range: 2
-  speed: 0
+  vfxPrefab: {fileID: 2680830935764052329, guid: 76957001530c8dc468c5e53bf3becd6d, type: 3}
+  kind: 1
+  range: 50
+  speed: 15
   hitMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
+  spawnBone: mixamorig:RightHand
+  spawnOffset: {x: 0, y: 0, z: 0}
   references:
     version: 2
     RefIds: []

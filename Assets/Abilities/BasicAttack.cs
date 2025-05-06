@@ -19,7 +19,8 @@ public sealed class BasicAttackAbilitySO
         : AbilitySO<BasicAttackAbilitySO.BasicAttackSpec>,        // new GAS base-class
           IGameplayAbilityData,
           IAbilityDeliveryData,
-          IVfxProvider
+          IVfxProvider,
+          IHasSpawnOrigin
 {
   /*──────── Designer-tweaks ───────────────────────────────*/
   [Header("Timeline (sec)")]
@@ -37,6 +38,10 @@ public sealed class BasicAttackAbilitySO
   [SerializeField] private float range = 2.0f;        // metres
   [SerializeField] private float speed = 0f;          // 0 = melee / hitscan
   [SerializeField] private LayerMask hitMask = ~0;         // default: hit everything
+
+  [Header("Spawn Origin")]
+  [SerializeField] private string spawnBone = "RightHand"; // Humanoid bone name
+  [SerializeField] private Vector3 spawnOffset = Vector3.zero; // local offset inside that bone
 
   /*──────── IGameplayAbilityData ──────────────────────────*/
   public AbilitySlot Slot => AbilitySlot.BasicAttack;
@@ -59,6 +64,9 @@ public sealed class BasicAttackAbilitySO
 
   /*──────── IVfxProvider ─────────────────────────────────*/
   public GameObject VfxPrefab => vfxPrefab;
+
+  public string SpawnBone => spawnBone; // Humanoid bone name
+  public Vector3 SpawnOffset => spawnOffset; // local offset inside that bone
 
   /*──────── GAS spec - minimal stub (SEA drives logic) ──*/
   public sealed class BasicAttackSpec : AbilitySpec

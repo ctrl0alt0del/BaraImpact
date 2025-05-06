@@ -69,7 +69,6 @@ public class AttackInstanceComponent : MonoBehaviour
   void Update()
   {
     if (sm.Current != AttackInstanceStates.Active) return;
-
     if ((lifetime -= Time.deltaTime) <= 0)
       QueueCollided();
     else if (kind == AttackKind.Projectile)
@@ -95,6 +94,7 @@ public class AttackInstanceComponent : MonoBehaviour
 
   void QueueCollided()
   {
+    Debug.Log("AttackInstanceComponent: Queuing Collided state");
     MutatorQueue.Enqueue(
         new StateMutator(gameObject, AttackInstanceStates.Collided));
   }
