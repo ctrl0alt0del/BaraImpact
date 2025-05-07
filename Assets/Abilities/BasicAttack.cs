@@ -39,6 +39,7 @@ public sealed class BasicAttackAbilitySO
   [SerializeField] private float range = 2.0f;        // metres
   [SerializeField] private float speed = 0f;          // 0 = melee / hitscan
   [SerializeField] private LayerMask hitMask = ~0;         // default: hit everything
+  [SerializeField] private float collisionRadius = 0.5f; // melee hit radius
 
   [Header("Spawn Origin")]
   [SerializeField] private string spawnBone = "RightHand"; // Humanoid bone name
@@ -46,9 +47,10 @@ public sealed class BasicAttackAbilitySO
   [Header("Auto-Lock")]
   [SerializeField] private float lockHalfAngle = 45f; // auto-lock cone angle
   [SerializeField] private float turnRate = 720f; // degrees/sec
+  [SerializeField] private float lockRange = 2.0f; // auto-lock to target on cast
   [SerializeField] private NpcRole[] targetPriority = { };
   public NpcRole[] TargetPriority => targetPriority;
-  public float LockRadius => range; // auto-lock to target on cast
+  public float LockRadius => lockRange; // auto-lock to target on cast
   public float LockHalfAngle => lockHalfAngle; // auto-lock cone angle
   public float TurnRate => turnRate; // degrees/sec
 
@@ -70,6 +72,7 @@ public sealed class BasicAttackAbilitySO
   public float Range => range;
   public float Speed => speed;
   public LayerMask HitMask => hitMask;
+  public float CollisionRadius => collisionRadius; // melee hit radius
 
   /*──────── IVfxProvider ─────────────────────────────────*/
   public GameObject VfxPrefab => vfxPrefab;

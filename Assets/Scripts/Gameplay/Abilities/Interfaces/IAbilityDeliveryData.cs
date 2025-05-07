@@ -13,5 +13,6 @@ namespace Game.Abilities
     float Range { get; }
     float Speed { get; }
     LayerMask HitMask { get; }    // who can be hit
+    float CollisionRadius { get; }
   }
 }

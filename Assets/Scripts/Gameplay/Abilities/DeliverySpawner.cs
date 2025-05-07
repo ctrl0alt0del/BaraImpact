@@ -48,8 +48,9 @@ public class DeliverySpawner : MonoBehaviour
               data.Speed,
               vfx,
               data.HitMask,
-              caster);
-    go.layer = LayerMask.NameToLayer("Projectile");
+              caster,
+              data.CollisionRadius);
+    //go.layer = LayerMask.NameToLayer("Projectile");
 
     if (homingTarget)
       comp.SetHomingTarget(homingTarget, turnRate);
