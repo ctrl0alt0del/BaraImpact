@@ -20,7 +20,8 @@ public sealed class BasicAttackAbilitySO
           IGameplayAbilityData,
           IAbilityDeliveryData,
           IVfxProvider,
-          IHasSpawnOrigin
+          IHasSpawnOrigin,
+          IAutoLockDelivery
 {
   /*──────── Designer-tweaks ───────────────────────────────*/
   [Header("Timeline (sec)")]
@@ -42,6 +43,14 @@ public sealed class BasicAttackAbilitySO
   [Header("Spawn Origin")]
   [SerializeField] private string spawnBone = "RightHand"; // Humanoid bone name
   [SerializeField] private Vector3 spawnOffset = Vector3.zero; // local offset inside that bone
+  [Header("Auto-Lock")]
+  [SerializeField] private float lockHalfAngle = 45f; // auto-lock cone angle
+  [SerializeField] private float turnRate = 720f; // degrees/sec
+  [SerializeField] private NpcRole[] targetPriority = { };
+  public NpcRole[] TargetPriority => targetPriority;
+  public float LockRadius => range; // auto-lock to target on cast
+  public float LockHalfAngle => lockHalfAngle; // auto-lock cone angle
+  public float TurnRate => turnRate; // degrees/sec
 
   /*──────── IGameplayAbilityData ──────────────────────────*/
   public AbilitySlot Slot => AbilitySlot.BasicAttack;

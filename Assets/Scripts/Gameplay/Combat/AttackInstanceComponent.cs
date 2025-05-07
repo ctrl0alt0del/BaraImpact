@@ -1,14 +1,15 @@
+//-------------------------------------------------------------
+// AttackInstanceComponent.cs – homing-aware projectile
+//-------------------------------------------------------------
 using UnityEngine;
-using SEA.State;        // StateMachine, EnterEvent
-using SEA.Mutators;     // MutatorQueue, StateMutator
-using Game.Combat;
+using SEA.State;
+using SEA.Mutators;
 using SEA.Events;
 using Game.Combat;
 
 [RequireComponent(typeof(StateMachine))]
 public class AttackInstanceComponent : MonoBehaviour
 {
-  /* config */
   AttackKind kind;
   float range;
   float speed;
@@ -18,10 +19,14 @@ public class AttackInstanceComponent : MonoBehaviour
   Transform owner;
   GameObject vfxInstance;
 
+  /* ── homing ── */
+  Transform homingTarget;
+  float turnRateDeg;
+
   StateMachine sm;
 
-  /*──────── PUBLIC INIT ────────*/
-  public void Init(AttackKind k, float rng, float spd, GameObject vfxPrefab, LayerMask mask, Transform own)
+  public void Init(AttackKind k, float rng, float spd,
+                   GameObject vfxPrefab, LayerMask mask, Transform own)
   {
     kind = k;
     range = rng;
@@ -31,7 +36,7 @@ public class AttackInstanceComponent : MonoBehaviour
 
     lifetime = kind switch
     {
-      AttackKind.Melee => rng,                       // rng = active-time
+      AttackKind.Melee => rng,
       AttackKind.Projectile => rng / Mathf.Max(spd, 0.01f),
       AttackKind.Hitscan => 0.1f,
       _ => 0.5f
@@ -43,20 +48,23 @@ public class AttackInstanceComponent : MonoBehaviour
     if (kind != AttackKind.Hitscan)
       gameObject.AddComponent<SphereCollider>().isTrigger = true;
 
-    // schedule state change to Active on the next Tick
-    MutatorQueue.Enqueue(
-        new StateMutator(gameObject, AttackInstanceStates.Active));
+    MutatorQueue.Enqueue(new StateMutator(gameObject,
+                           AttackInstanceStates.Active));
 
     if (kind == AttackKind.Hitscan)
       DoHitscan();
   }
 
-  /*──────── Lifecycle ────────*/
+  public void SetHomingTarget(Transform tgt, float turnRate)
+  {
+    homingTarget = tgt;
+    turnRateDeg = Mathf.Max(0f, turnRate);
+  }
+
   void Awake()
   {
     sm = GetComponent<StateMachine>();
     sm.Goto(AttackInstanceStates.Created);
-
     GlobalEventBus.Subscribe<EnterEvent>(OnEnter);
   }
 
@@ -69,13 +77,29 @@ public class AttackInstanceComponent : MonoBehaviour
   void Update()
   {
     if (sm.Current != AttackInstanceStates.Active) return;
+
     if ((lifetime -= Time.deltaTime) <= 0)
+    {
       QueueCollided();
-    else if (kind == AttackKind.Projectile)
+      return;
+    }
+
+    if (kind == AttackKind.Projectile)
+    {
+      if (homingTarget && homingTarget.gameObject.activeInHierarchy)
+      {
+        Vector3 dir = (homingTarget.position -
+                       transform.position).normalized;
+        Quaternion desired = Quaternion.LookRotation(dir);
+        transform.rotation = Quaternion.RotateTowards(
+                                transform.rotation,
+                                desired,
+                                turnRateDeg * Time.deltaTime);
+      }
       transform.position += transform.forward * speed * Time.deltaTime;
+    }
   }
 
-  /*──────── Hit / expire ────────*/
   void OnTriggerEnter(Collider other)
   {
     if (sm.Current != AttackInstanceStates.Active) return;
@@ -88,26 +112,21 @@ public class AttackInstanceComponent : MonoBehaviour
   void DoHitscan()
   {
     if (Physics.Raycast(owner.position + Vector3.up * 1.4f,
-                        owner.forward, out var hit, range, hitMask))
+                        owner.forward,
+                        out var hit,
+                        range,
+                        hitMask))
       hit.collider.GetComponent<IDamageable>()?.TakeDamage(damage);
   }
 
-  void QueueCollided()
-  {
-    Debug.Log("AttackInstanceComponent: Queuing Collided state");
-    MutatorQueue.Enqueue(
-        new StateMutator(gameObject, AttackInstanceStates.Collided));
-  }
+  void QueueCollided() =>
+      MutatorQueue.Enqueue(new StateMutator(gameObject,
+                           AttackInstanceStates.Collided));
 
-  /*──────── SEA event pump ────────*/
-  void OnEnter(EnterEvent evt)
+  void OnEnter(EnterEvent e)
   {
-    if (evt.Target != gameObject) return;
-
-    if (evt.State == AttackInstanceStates.Collided)
-    {
-      // optional: impact VFX here
+    if (e.Target != gameObject) return;
+    if (e.State == AttackInstanceStates.Collided)
       Destroy(gameObject);
-    }
   }
 }

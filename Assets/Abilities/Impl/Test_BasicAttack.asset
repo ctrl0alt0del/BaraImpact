@@ -30,7 +30,7 @@ MonoBehaviour:
   <Conditions>k__BackingField: []
   windup: 1
   active: 0.05
-  recover: 0.25
+  recover: 1
   animationClip: {fileID: -203655887218126122, guid: 4865ede40b874434cab95bbfb404fce1, type: 3}
   attackPrefab: {fileID: 3895010146851445032, guid: ebb4dd8153b7bf1449a5509318dd06fd, type: 3}
   vfxPrefab: {fileID: 2680830935764052329, guid: 76957001530c8dc468c5e53bf3becd6d, type: 3}

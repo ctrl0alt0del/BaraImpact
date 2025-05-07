@@ -13,5 +13,7 @@ public interface IGameplayAbilityData
   float ActiveTime { get; }
   float RecoverTime { get; }
 
+  float TotalTime => WindupTime + ActiveTime + RecoverTime;
+
   UnityEngine.AnimationClip AnimationClip { get; }
 }
