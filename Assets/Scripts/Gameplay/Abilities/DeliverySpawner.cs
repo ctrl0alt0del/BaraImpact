@@ -18,6 +18,7 @@ public class DeliverySpawner : MonoBehaviour
 
     if (data is IAutoLockDelivery auto)
     {
+      Debug.Log($"Auto-locking to {auto.TargetPriority}");
       homingTarget = TargetingUtil.Acquire(auto.TargetPriority,
                                            caster.position,
                                            caster.forward,

@@ -1,3 +1,6 @@
+//-------------------------------------------------------------
+// NpcIdentity.cs
+//-------------------------------------------------------------
 using UnityEngine;
 
 public enum NpcRole
@@ -8,13 +11,25 @@ public enum NpcRole
   Enemy
 }
 
-/// <summary>Attach to any NPC or dummy target so game systems
-///          can query its alignment without knowing other logic.</summary>
-public class NpcIdentity : MonoBehaviour
+/// <summary>Single component that exposes both alignment and a
+///          basic targeting surface.
+///          • Attach to any NPC or dummy object.
+///          • Drag an “AimPoint” child (e.g., chest) in the Inspector.
+/// </summary>
+public class NpcIdentity : MonoBehaviour, ITargetable
 {
+  [Header("Alignment")]
   [SerializeField] NpcRole role = NpcRole.Neutral;
 
-  public NpcRole Role => role;
+  [Header("Targeting")]
+  [Tooltip("Optional. Defaults to this.transform if left empty.")]
+  [SerializeField] Transform aimPoint;
 
+  /*──────── Alignment API ────────*/
+  public NpcRole Role => role;
   public bool Is(NpcRole desired) => role == desired;
+
+  /*──────── ITargetable ──────────*/
+  public bool IsDestroyed => !gameObject.activeInHierarchy;
+  public Transform AimPoint => aimPoint != null ? aimPoint : transform;
 }
