@@ -39,9 +39,14 @@ MonoBehaviour:
   speed: 15
   hitMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
+  collisionRadius: 0.5
   spawnBone: mixamorig:RightHand
   spawnOffset: {x: 0, y: 0, z: 0}
+  lockHalfAngle: 45
+  turnRate: 720
+  lockRange: 20
+  targetPriority: 0300000001000000
   references:
     version: 2
     RefIds: []

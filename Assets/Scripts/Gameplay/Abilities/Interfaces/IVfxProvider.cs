@@ -1,11 +1,17 @@
-// Assets/Scripts/Gameplay/Abilities/IVfxProvider.cs
-using UnityEngine;
+using Game.Vfx;
 
 namespace Game.Abilities
 {
-  /// Implement on an ability SO if it must spawn a unique VFX when fired.
-  public interface IVfxProvider
-  {
-    GameObject VfxPrefab { get; }
-  }
+    /// <summary>
+    /// One-stop interface for an ability’s Cast / Projectile / Impact specs.
+    /// </summary>
+    public interface IVfxProvider
+    {
+        VfxSpawnSpec CastSpec { get; }
+        VfxSpawnSpec ProjectileSpec { get; }
+        VfxSpawnSpec ImpactSpec { get; }
+
+        /* legacy alias for scripts that referenced “VfxPrefab” */
+        VfxSpawnSpec VfxPrefab => ProjectileSpec;
+    }
 }
