@@ -1,17 +1,18 @@
-//-------------------------------------------------------------
+﻿//-------------------------------------------------------------
 // Assets/Scripts/Gameplay/Abilities/AbilityPhaseRunner.cs
 //-------------------------------------------------------------
 using UnityEngine;
 using System.Collections;
-using Game.Combat;
 using SEA.Events;
 using SEA.Mutators;
 using Game.States;
-using SEA.State;
+using Game.Abilities;
+using Game.Combat;
+using SEA.State; // DeliverySpawner
 
 namespace Game.Abilities
 {
-    [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(Animator), typeof(DeliverySpawner))]
     public class AbilityPhaseRunner : MonoBehaviour
     {
         const string AnimSpeed = "AbilitySpeedMul";
@@ -20,9 +21,11 @@ namespace Game.Abilities
         DeliverySpawner spawner;
 
         IGameplayAbilityData current;
+        AnimationClip activeClip;           // ← stores chosen variant
         float savedSpeed = 1f;
 
         public IGameplayAbilityData Current => current;
+        public AnimationClip ActiveClip => activeClip;   // ← public getter
 
         void Awake()
         {
@@ -34,11 +37,21 @@ namespace Game.Abilities
         void OnDestroy() =>
             GlobalEventBus.Unsubscribe<EnterEvent>(OnEnter);
 
+        /// <summary>Called by AbilityComponent when an ability is queued.</summary>
         public void Arm(IGameplayAbilityData ability)
         {
             current = ability;
+
+            // Pick the next animation variant (or default)
+            if (ability is IVfxVariantProvider vp &&
+                vp.CastVariants &&
+                vp.CastVariants.GetNext(out var clip, out _))
+            {
+                activeClip = clip;
+            }
         }
 
+        /*──────── SEA event pump ─────────*/
         void OnEnter(EnterEvent e)
         {
             if (e.Target != gameObject || current == null) return;
@@ -51,14 +64,15 @@ namespace Game.Abilities
             }
         }
 
+        /*──────── Phase coroutines ───────*/
         IEnumerator Windup()
         {
-            if (current.AnimationClip && current.TotalTime > 0f)
+            if (activeClip && current.TotalTime > 0f)
             {
                 savedSpeed = anim.GetFloat(AnimSpeed);
                 anim.SetFloat(AnimSpeed,
-                              current.AnimationClip.length / current.TotalTime);
-                anim.CrossFade(current.AnimationClip.name, 0.12f, 1);
+                              activeClip.length / current.TotalTime);
+                anim.CrossFade(activeClip.name, 0.12f, 1);
             }
             yield return new WaitForSeconds(current.WindupTime);
 
@@ -69,7 +83,8 @@ namespace Game.Abilities
         IEnumerator Active()
         {
             if (current is IAbilityDeliveryData d)
-                spawner.Spawn(d, transform);
+                spawner.Spawn(d, transform);            // ← projectile / melee hit
+
             yield return new WaitForSeconds(current.ActiveTime);
 
             MutatorQueue.Enqueue(new StateMutator(gameObject,
@@ -81,6 +96,7 @@ namespace Game.Abilities
             yield return new WaitForSeconds(current.RecoverTime);
             anim.SetFloat(AnimSpeed, savedSpeed);
             current = null;
+            activeClip = null;
 
             MutatorQueue.Enqueue(new StateMutator(gameObject,
                                    UnitStates.Idle));

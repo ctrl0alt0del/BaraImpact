@@ -5,9 +5,8 @@ namespace Game.Abilities
     /// <summary>
     /// One-stop interface for an ability’s Cast / Projectile / Impact specs.
     /// </summary>
-    public interface IVfxProvider
+    public interface IRangeVfxProvider
     {
-        VfxSpawnSpec CastSpec { get; }
         VfxSpawnSpec ProjectileSpec { get; }
         VfxSpawnSpec ImpactSpec { get; }
 

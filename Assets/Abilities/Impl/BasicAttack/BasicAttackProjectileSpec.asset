@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fd84a2e22c524047bacfddcfcedb12e, type: 3}
   m_Name: BasicAttackProjectileSpec
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 0}
-  Bone: 
+  Prefab: {fileID: 2680830935764052329, guid: 76957001530c8dc468c5e53bf3becd6d, type: 3}
+  Bone: mixamorig:RightHand
   ParentToBone: 1
   PositionOffset: {x: 0, y: 0, z: 0}
   RotationOffset: {x: 0, y: 0, z: 0}

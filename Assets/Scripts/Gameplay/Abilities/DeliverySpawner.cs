@@ -18,27 +18,26 @@ namespace Game.Combat
         {
             (Vector3 pos, Vector3 dir) = ResolveSpawnPoint(data, caster);
 
-            /* optional homing */
             Transform homing = null;
             float turn = 0f;
             if (data is IAutoLockDelivery auto)
             {
                 homing = TargetingUtil.Acquire(auto.TargetPriority,
-                                               caster.position,
-                                               caster.forward,
-                                               auto.LockRadius,
-                                               auto.LockHalfAngle,
-                                               data.HitMask);
+                    caster.position,
+                    caster.forward,
+                    auto.LockRadius,
+                    auto.LockHalfAngle,
+                    data.HitMask);
                 turn = auto.TurnRate;
                 if (homing) dir = (homing.position - pos).normalized;
             }
 
             GameObject go = Instantiate(data.AttackPrefab,
-                                        pos,
-                                        Quaternion.LookRotation(dir));
+                pos,
+                Quaternion.LookRotation(dir));
 
             var comp = go.GetComponent<AttackInstanceComponent>();
-            var vfx = data as IVfxProvider;
+            var vfx = data as IRangeVfxProvider;
 
             var spawn = new AttackSpawnData
             {
@@ -61,8 +60,6 @@ namespace Game.Combat
                 l.impactSpec = vfx.ImpactSpec;
             }
         }
-
-        /* resolve spawn helper (same as before) */
         (Vector3 pos, Vector3 dir) ResolveSpawnPoint(IAbilityDeliveryData data, Transform caster)
         {
             const float fallbackHeight = 1.3f;

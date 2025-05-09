@@ -11,11 +11,10 @@ public sealed class AbilityQueue
   public bool TryEnqueue(IGameplayAbilityData ability)
   {
     Debug.Log($"AbilityQueue: TryEnqueue {ability.Slot}");
-    bool freeToStart = _pending == null;
-    bool canInterrupt = _active != null &&
+    bool canInterrupt = _active == null ||
                         ability.Priority > _active.Priority;
 
-    if (!freeToStart && !canInterrupt) return false;
+    if (!canInterrupt) return false;
     if (canInterrupt) _active = null;
 
     _pending = ability;

@@ -1,4 +1,4 @@
-using H2V.GameplayAbilitySystem.AbilitySystem.Components;  // AbilitySystemBehaviour 
+using H2V.GameplayAbilitySystem.AbilitySystem.Components;  // AbilitySystemBehaviour
 using Game.Abilities;
 public interface IGameplayAbilityData
 {
@@ -14,6 +14,4 @@ public interface IGameplayAbilityData
   float RecoverTime { get; }
 
   float TotalTime => WindupTime + ActiveTime + RecoverTime;
-
-  UnityEngine.AnimationClip AnimationClip { get; }
 }

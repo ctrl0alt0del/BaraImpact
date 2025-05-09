@@ -22,18 +22,13 @@ namespace Game.Vfx
             if (e.State != UnitStates.AbilityWindup) return;
 
             var runner = GetComponent<AbilityPhaseRunner>();
-            if (runner?.Current is not IVfxProvider baseVfx) return;
+            if (runner?.Current is not IVfxVariantProvider vp) return;
 
-            VfxSpawnSpec spec = baseVfx.CastSpec;
-
-            if (runner.Current is IVfxVariantProvider vp &&
-                vp.CastVariants &&
-                vp.CastVariants.TryGetSpec(runner.Current.AnimationClip, out var overrideSpec))
+            if (vp.CastVariants &&
+                vp.CastVariants.TryGetSpec(runner.ActiveClip, out var spec))
             {
-                spec = overrideSpec;
+                spec?.Spawn(transform);
             }
-
-            spec?.Spawn(transform);
         }
     }
 }
