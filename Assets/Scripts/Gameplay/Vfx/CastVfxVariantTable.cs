@@ -4,7 +4,7 @@ namespace Game.Vfx
 {
     /// <summary>Maps individual Animation Clips to specific cast VFX specs
     /// and supports round-robin cycling via GetNext().</summary>
-    [CreateAssetMenu(menuName = "Bara/VFX Cast Variant Table", fileName = "CastVfxTable")]
+    [CreateAssetMenu(menuName = "Bara Impact/VFX/VFX Cast Variant Table", fileName = "CastVfxTable")]
     public class CastVfxVariantTable : ScriptableObject
     {
         [System.Serializable]

@@ -10,7 +10,7 @@ using H2V.GameplayAbilitySystem.AbilitySystem.Components;
 /// Magnitude = ( SourceAttribute.FinalValue * Coefficient ) + Additive
 /// Lets you mirror or scale any attribute from the Source or Target ASC.
 /// </summary>
-[CreateAssetMenu(menuName = "Bara Impact/Attribute/Modifier Magnitude/Attribute Based")]
+[CreateAssetMenu(menuName = "Bara Impact/Attributes/Modifier Magnitude/Attribute Based")]
 public class AttributeBasedMagnitudeSO : ModifierComputationSO
 {
   [Header("Attribute Source")]

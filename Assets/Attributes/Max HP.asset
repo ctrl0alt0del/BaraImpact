@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e9d982506e45384eaedadfbd72579a8, type: 3}
+  m_Name: Max HP
+  m_EditorClassIdentifier: 
+  _guid: 32c5f52923a23ec41a9e776dc932248a
+  <InitialValueCalculator>k__BackingField:
+    rid: 2796831293869129802
+  <CurrentValueCalculator>k__BackingField:
+    rid: 2796831293869129812
+  references:
+    version: 2
+    RefIds:
+    - rid: 2796831293869129802
+      type: {class: InitialAttributeValueCalculator, ns: H2V.GameplayAbilitySystem.AttributeSystem, asm: H2V.GameplayAbilitySystem}
+      data: 
+    - rid: 2796831293869129812
+      type: {class: BasicDerivedAttributeCalculator, ns: , asm: Assembly-CSharp}
+      data:
+        baseSecondaryAttributeSo: {fileID: 11400000, guid: bb6e276a8a692a94ab744f9749ec42e5, type: 2}
+        basePrimalAttributeSo: {fileID: 11400000, guid: dee7e336a6a8c524b8f2316a662bee85, type: 2}
+        primalWeightF: 10

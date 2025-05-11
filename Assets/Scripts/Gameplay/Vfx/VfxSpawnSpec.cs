@@ -2,7 +2,7 @@
 
 namespace Game.Vfx
 {
-    [CreateAssetMenu(menuName = "Bara/VFX Spawn Spec", fileName = "NewVfxSpec")]
+    [CreateAssetMenu(menuName = "Bara Impact/VFX/VFX Spawn Spec", fileName = "NewVfxSpec")]
     public class VfxSpawnSpec : ScriptableObject
     {
         [Header("Visual")]

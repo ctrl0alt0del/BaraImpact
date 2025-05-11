@@ -2901,7 +2901,6 @@ GameObject:
   - component: {fileID: 6982812147307579058}
   - component: {fileID: 6982812147307579063}
   - component: {fileID: 6982812147307579062}
-  - component: {fileID: 6982812147307579065}
   - component: {fileID: 6982812147307579064}
   - component: {fileID: 6982812147307579066}
   m_Layer: 8
@@ -3495,40 +3494,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c39e7520002cdaf4bb63666b894e8191, type: 2}
   - {fileID: 11400000, guid: f54f81548a99a9e4d98576d05b18b194, type: 2}
   - {fileID: 11400000, guid: d0859770d4ec480498da2a7cde05002e, type: 2}
-  _attributeValues:
-  - <Attribute>k__BackingField: {fileID: 11400000, guid: c39e7520002cdaf4bb63666b894e8191, type: 2}
-    <BaseValue>k__BackingField: 5
-    <CurrentValue>k__BackingField: 0
-    ExternalModifier:
-      Additive: 0
-      Multiplicative: 0
-      Overriding: 0
-    CoreModifier:
-      Additive: 0
-      Multiplicative: 0
-      Overriding: 0
-  - <Attribute>k__BackingField: {fileID: 11400000, guid: f54f81548a99a9e4d98576d05b18b194, type: 2}
-    <BaseValue>k__BackingField: 8
-    <CurrentValue>k__BackingField: 0
-    ExternalModifier:
-      Additive: 0
-      Multiplicative: 0
-      Overriding: 0
-    CoreModifier:
-      Additive: 0
-      Multiplicative: 0
-      Overriding: 0
-  - <Attribute>k__BackingField: {fileID: 11400000, guid: d0859770d4ec480498da2a7cde05002e, type: 2}
-    <BaseValue>k__BackingField: 2
-    <CurrentValue>k__BackingField: 0
-    ExternalModifier:
-      Additive: 0
-      Multiplicative: 0
-      Overriding: 0
-    CoreModifier:
-      Additive: 0
-      Multiplicative: 0
-      Overriding: 0
+  - {fileID: 11400000, guid: dee7e336a6a8c524b8f2316a662bee85, type: 2}
+  - {fileID: 11400000, guid: bb6e276a8a692a94ab744f9749ec42e5, type: 2}
+  - {fileID: 11400000, guid: 32c5f52923a23ec41a9e776dc932248a, type: 2}
+  _attributeValues: []
 --- !u!114 &6982812147307579057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3558,6 +3527,10 @@ MonoBehaviour:
           Value: 8
         - Attribute: {fileID: 11400000, guid: d0859770d4ec480498da2a7cde05002e, type: 2}
           Value: 2
+        - Attribute: {fileID: 11400000, guid: dee7e336a6a8c524b8f2316a662bee85, type: 2}
+          Value: 5
+        - Attribute: {fileID: 11400000, guid: bb6e276a8a692a94ab744f9749ec42e5, type: 2}
+          Value: 100
 --- !u!114 &6982812147307579058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3646,18 +3619,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8835e7b481a44404ea4082274ab0e267, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6982812147307579065
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4416926082897315439}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c79a10a1835fa94391766e8a7bb06f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6982812147307579066
