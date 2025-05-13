@@ -1,6 +1,8 @@
 //-------------------------------------------------------------
 // Assets/Scripts/Gameplay/Combat/AttackInstanceComponent.cs
 //-------------------------------------------------------------
+
+using Game.States;
 using UnityEngine;
 using SEA.State;
 using SEA.Mutators;
@@ -111,20 +113,47 @@ namespace Game.Combat
         {
             if (sm.Current != AttackInstanceStates.Active) return;
             if (((1 << other.gameObject.layer) & d.HitMask) == 0) return;
+            if (!RolePasses(other)) return;
 
+            NotifyTarget(other.gameObject);   // <──
             QueueCollided();
         }
 
         void DoHitscan()
         {
-            if (Physics.Raycast(d.Owner.position + Vector3.up * 1.4f,
-                                d.Owner.forward,
-                                out var hit,
-                                d.Range,
-                                d.HitMask))
-            {
-                SpawnImpact();
-            }
+            Vector3 origin = d.Owner.position + Vector3.up * 1.4f;
+            if (!Physics.Raycast(origin, d.Owner.forward, out var hit, d.Range, d.HitMask))
+                return;
+            if (!RolePasses(hit.collider)) return;
+
+            NotifyTarget(hit.collider.gameObject);   // <──
+            SpawnImpact();
+        }
+
+        /*──────────────── helpers ───────────────*/
+        bool RolePasses(Component c)
+        {
+            if (d.AllowedRoles == null || d.AllowedRoles.Length == 0)
+                return true;
+
+            var id = c.GetComponentInParent<NpcIdentity>();
+            if (!id) return false;
+
+            foreach (var role in d.AllowedRoles)
+                if (id.Role == role) return true;
+
+            return false;
+        }
+
+        void NotifyTarget(GameObject tgt)
+        {
+            MutatorQueue.Enqueue(new StateMutator(
+                tgt,
+                UnitStates.HitReceived,          // target enters this state
+                null,
+                0,
+                new HitContext(d.Owner, d.Kind)  // payload for later damage calc
+            ));
         }
 
         void SpawnImpact() => d.ImpactSpec?.Spawn(transform);

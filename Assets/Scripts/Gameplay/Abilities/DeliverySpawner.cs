@@ -22,7 +22,7 @@ namespace Game.Combat
             float turn = 0f;
             if (data is IAutoLockDelivery auto)
             {
-                homing = TargetingUtil.Acquire(auto.TargetPriority,
+                homing = TargetingUtil.Acquire(auto.TargetRoles,
                     caster.position,
                     caster.forward,
                     auto.LockRadius,
@@ -48,7 +48,8 @@ namespace Game.Combat
                 HitMask = data.HitMask,
                 Owner = caster,
                 ProjectileSpec = vfx?.ProjectileSpec,
-                ImpactSpec = vfx?.ImpactSpec
+                ImpactSpec = vfx?.ImpactSpec,
+                AllowedRoles = data.TargetRoles
             };
 
             comp.Init(spawn);

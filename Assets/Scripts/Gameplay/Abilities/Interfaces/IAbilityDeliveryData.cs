@@ -14,5 +14,7 @@ namespace Game.Abilities
     float Speed { get; }
     LayerMask HitMask { get; }    // who can be hit
     float CollisionRadius { get; }
-  }
+
+    NpcRole[] TargetRoles { get; }
+    }
 }

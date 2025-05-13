@@ -31,7 +31,7 @@ namespace SEA.Mutators
       if (sm == null) return;
       if (m.FromState != null && sm.Current != m.FromState) return;
 
-      sm.Goto(m.ToState);              // fires Exit / Enter events
+      sm.Goto(m.ToState, m.Payload);              // fires Exit / Enter events
     }
   }
 }

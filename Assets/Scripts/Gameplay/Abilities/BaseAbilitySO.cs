@@ -93,7 +93,7 @@ namespace Game.Abilities
         public float LockRadius => lockRadius;
         public float LockHalfAngle => lockHalfAngle;
         public float TurnRate => turnRate;
-        public NpcRole[] TargetPriority => targetPriority;
+        public NpcRole[] TargetRoles => targetPriority;
 
         /*──────── IVfxVariantProvider ───────────────────*/
         public CastVfxVariantTable CastVariants => castVariants;

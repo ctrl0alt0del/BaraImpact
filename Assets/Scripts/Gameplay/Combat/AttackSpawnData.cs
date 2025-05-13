@@ -17,5 +17,7 @@ namespace Game.Combat
 
         public VfxSpawnSpec ProjectileSpec;
         public VfxSpawnSpec ImpactSpec;
+
+        public NpcRole[] AllowedRoles;
     }
 }

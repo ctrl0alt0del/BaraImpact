@@ -8,5 +8,6 @@ namespace Game.States
     public const string AbilityWindup = "AbilityWindup";
     public const string AbilityActive = "AbilityActive";
     public const string AbilityRecover = "AbilityRecover";
-  }
+    public const string HitReceived = "HitReceived";
+    }
 }
