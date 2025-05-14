@@ -6,9 +6,8 @@ using System.Collections;
 using SEA.Events;
 using SEA.Mutators;
 using Game.States;
-using Game.Abilities;
 using Game.Combat;
-using SEA.State; // DeliverySpawner
+using SEA.State;               // DeliverySpawner
 
 namespace Game.Abilities
 {
@@ -17,32 +16,58 @@ namespace Game.Abilities
     {
         const string AnimSpeed = "AbilitySpeedMul";
 
+        /* ───────── FIELDS ───────── */
         Animator anim;
         DeliverySpawner spawner;
 
         IGameplayAbilityData current;
-        AnimationClip activeClip;           // ← stores chosen variant
+        AnimationClip activeClip;
+
+        // AOC plumbing
+        RuntimeAnimatorController baseCtrl;
+        AnimatorOverrideController aoc;
+        AnimationClip placeholderClip;
+
         float savedSpeed = 1f;
 
         public IGameplayAbilityData Current => current;
-        public AnimationClip ActiveClip => activeClip;   // ← public getter
+        public AnimationClip ActiveClip => activeClip;
 
+        /* ───────── SETUP ───────── */
         void Awake()
         {
             anim = GetComponent<Animator>();
             spawner = GetComponent<DeliverySpawner>();
+
+            // Grab original controller and build an AOC on top of it once
+            baseCtrl = anim.runtimeAnimatorController;
+            aoc = new AnimatorOverrideController(baseCtrl);
+
+            // cache the placeholder clip used by Cast_Generic
+            foreach (var pair in aoc.clips)
+            {
+                // pair.originalClip is the key
+                if (pair.originalClip.name == "Cast_placeholder")
+                {
+                    placeholderClip = pair.originalClip;
+                    break;
+                }
+            }
+
             GlobalEventBus.Subscribe<EnterEvent>(OnEnter);
         }
 
-        void OnDestroy() =>
+        void OnDestroy()
+        {
             GlobalEventBus.Unsubscribe<EnterEvent>(OnEnter);
+        }
 
-        /// <summary>Called by AbilityComponent when an ability is queued.</summary>
+        /* ───────── CALLED BY AbilityComponent ───────── */
         public void Arm(IGameplayAbilityData ability)
         {
             current = ability;
 
-            // Pick the next animation variant (or default)
+            // choose a variant clip if the ability provides one
             if (ability is IVfxVariantProvider vp &&
                 vp.CastVariants &&
                 vp.CastVariants.GetNext(out var clip, out _))
@@ -51,7 +76,7 @@ namespace Game.Abilities
             }
         }
 
-        /*──────── SEA event pump ─────────*/
+        /* ───────── SEA EVENT HANDLER ───────── */
         void OnEnter(EnterEvent e)
         {
             if (e.Target != gameObject || current == null) return;
@@ -64,42 +89,48 @@ namespace Game.Abilities
             }
         }
 
-        /*──────── Phase coroutines ───────*/
+        /* ───────── COROUTINES ───────── */
         IEnumerator Windup()
         {
             if (activeClip && current.TotalTime > 0f)
             {
+                // 1) override placeholder with chosen clip
+                aoc[placeholderClip] = activeClip;
+                anim.runtimeAnimatorController = aoc;
+
+                // 2) play state at speed so it finishes exactly at Windup end
                 savedSpeed = anim.GetFloat(AnimSpeed);
-                anim.SetFloat(AnimSpeed,
-                              activeClip.length / current.TotalTime);
-                anim.CrossFade(activeClip.name, 0.12f, 1);
+                anim.SetFloat(AnimSpeed, activeClip.length / current.TotalTime);
+                anim.CrossFade("Cast_Generic", 0.12f, 1);   // layer 0
             }
+
             yield return new WaitForSeconds(current.WindupTime);
 
-            MutatorQueue.Enqueue(new StateMutator(gameObject,
-                                   UnitStates.AbilityActive));
+            MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.AbilityActive));
         }
 
         IEnumerator Active()
         {
             if (current is IAbilityDeliveryData d)
-                spawner.Spawn(d, transform);            // ← projectile / melee hit
+                spawner.Spawn(d, transform);    // projectile or melee hitbox
 
             yield return new WaitForSeconds(current.ActiveTime);
 
-            MutatorQueue.Enqueue(new StateMutator(gameObject,
-                                   UnitStates.AbilityRecover));
+            MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.AbilityRecover));
         }
 
         IEnumerator Recover()
         {
             yield return new WaitForSeconds(current.RecoverTime);
+
+            // restore original speed & controller
             anim.SetFloat(AnimSpeed, savedSpeed);
+            anim.runtimeAnimatorController = baseCtrl;
+
             current = null;
             activeClip = null;
 
-            MutatorQueue.Enqueue(new StateMutator(gameObject,
-                                   UnitStates.Idle));
+            MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.Idle));
         }
     }
 }

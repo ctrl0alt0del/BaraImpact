@@ -49,7 +49,14 @@ namespace Game.Combat
                 Owner = caster,
                 ProjectileSpec = vfx?.ProjectileSpec,
                 ImpactSpec = vfx?.ImpactSpec,
-                AllowedRoles = data.TargetRoles
+                AllowedRoles = data.TargetRoles,
+                Lifetime = data.Kind switch
+                {
+                    AttackKind.Melee => ((IGameplayAbilityData)data).ActiveTime,
+                    AttackKind.Projectile => data.Range / Mathf.Max(data.Speed, 0.01f),
+                    AttackKind.Hitscan => 0.1f,
+                    _ => 0.5f
+                }
             };
 
             comp.Init(spawn);

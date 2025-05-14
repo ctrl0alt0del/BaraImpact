@@ -12,6 +12,7 @@ namespace Game.Combat
         public float Range;
         public float Speed;
         public float CollisionRadius;
+        public float Lifetime;
         public LayerMask HitMask;
         public Transform Owner;
 
