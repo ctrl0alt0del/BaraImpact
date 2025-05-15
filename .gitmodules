@@ -1,3 +1,0 @@
-[submodule "FluidBT"]
-	path = Assets/External/Plugins/FluidBT
-	url = https://github.com/ashblue/fluid-behavior-tree.git
