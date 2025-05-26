@@ -30,7 +30,7 @@ MonoBehaviour:
   <Conditions>k__BackingField: []
   windup: 1
   active: 0.05
-  recover: 1
+  recover: 0.5
   attackPrefab: {fileID: 3895010146851445032, guid: ebb4dd8153b7bf1449a5509318dd06fd, type: 3}
   projectileSpec: {fileID: 11400000, guid: 2f16da21d99e3ad49b760d98cbeebd20, type: 2}
   impactSpec: {fileID: 0}

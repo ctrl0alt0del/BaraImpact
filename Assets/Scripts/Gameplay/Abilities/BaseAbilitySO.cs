@@ -56,7 +56,7 @@ namespace Game.Abilities
         [SerializeField] float lockHalfAngle = 45f;
         [SerializeField] float lockRadius = 2f;
         [SerializeField] float turnRate = 720f;
-        [SerializeField] NpcRole[] targetPriority = { };
+        [SerializeField] ActorAlignment[] targetPriority = { };
 
         /*──────── Cast-phase VFX variants ────────────────*/
         [Header("Cast VFX Variants")]
@@ -93,7 +93,7 @@ namespace Game.Abilities
         public float LockRadius => lockRadius;
         public float LockHalfAngle => lockHalfAngle;
         public float TurnRate => turnRate;
-        public NpcRole[] TargetRoles => targetPriority;
+        public ActorAlignment[] TargetRoles => targetPriority;
 
         /*──────── IVfxVariantProvider ───────────────────*/
         public CastVfxVariantTable CastVariants => castVariants;

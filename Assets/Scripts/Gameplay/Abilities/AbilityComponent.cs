@@ -26,13 +26,10 @@ public class AbilityComponent : MonoBehaviour
 
   readonly AbilityQueue queue = new AbilityQueue();
   readonly Dictionary<AbilitySlot, IGameplayAbilityData> slotMap = new();
-
-  StateMachine sm;
   AbilityPhaseRunner phase;
 
   void Awake()
   {
-    sm = GetComponent<StateMachine>();
     asc = GetComponent<AbilitySystemBehaviour>();
     phase = GetComponent<AbilityPhaseRunner>();
     effects = GetComponent<IEffectApplier>();
@@ -77,11 +74,8 @@ public class AbilityComponent : MonoBehaviour
     var slot = ToSlot(e.State);
     if (!slot.HasValue) return;
     if (!slotMap.TryGetValue(slot.Value, out var a)) return;
-    if (!queue.TryEnqueue(a)) return;
-
-    MutatorQueue.Enqueue(new StateMutator(gameObject,
-                          UnitStates.CostPayment));
-  }
+    EnqueueAbility(a);
+    }
 
   static AbilitySlot? ToSlot(string s) => s switch
   {
@@ -120,4 +114,18 @@ public class AbilityComponent : MonoBehaviour
     }
     queue.Clear();
   }
+
+  public bool TryGetAbility(AbilitySlot slot, out IGameplayAbilityData ability)
+  {
+      return slotMap.TryGetValue(slot, out ability);
+  }
+
+  public bool EnqueueAbility(IGameplayAbilityData ability)
+  {
+      if (!queue.TryEnqueue(ability))
+          return false;
+
+      MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.CostPayment));
+      return true;
+    }
 }

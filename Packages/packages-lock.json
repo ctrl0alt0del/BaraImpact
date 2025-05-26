@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "06067cd4c83e372310d6f79d1c625f6870ff7a2a"
     },
+    "com.fluid.behavior-tree": {
+      "version": "2.2.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.org"
+    },
     "com.h2v.extensions-core": {
       "version": "https://github.com/h2v9696/UnityExtensionsCore.git",
       "depth": 0,

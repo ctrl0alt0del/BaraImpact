@@ -15,6 +15,6 @@ namespace Game.Abilities
     LayerMask HitMask { get; }    // who can be hit
     float CollisionRadius { get; }
 
-    NpcRole[] TargetRoles { get; }
+    ActorAlignment[] TargetRoles { get; }
     }
 }

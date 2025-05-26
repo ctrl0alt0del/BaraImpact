@@ -169,11 +169,11 @@ namespace Game.Combat
         {
             if (d.AllowedRoles == null || d.AllowedRoles.Length == 0) return true;
 
-            var id = c.GetComponentInParent<NpcIdentity>();
+            var id = c.GetComponentInParent<ActorIdentity>();
             if (!id) return false;
 
-            foreach (var role in d.AllowedRoles)
-                if (id.Role == role) return true;
+            foreach (var alignment in d.AllowedRoles)
+                if (id.Is(alignment)) return true;
 
             return false;
         }
