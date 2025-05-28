@@ -147,9 +147,11 @@ namespace Game.Combat
         {
             if (sm.Current == AttackInstanceStates.Collided) return;
             if (((1 << other.gameObject.layer) & d.HitMask) == 0) return;
-            if (!RolePasses(other)) return;
+            if (RolePasses(other))
+            {
+                NotifyTarget(other.gameObject);
+            }
 
-            NotifyTarget(other.gameObject);
             QueueCollided();
         }
 
@@ -158,9 +160,12 @@ namespace Game.Combat
             Vector3 origin = d.Owner.position + Vector3.up * 1.4f;
             if (!Physics.Raycast(origin, d.Owner.forward, out var hit, d.Range, d.HitMask))
                 return;
-            if (!RolePasses(hit.collider)) return;
+            if (RolePasses(hit.collider))
+            {
+                NotifyTarget(hit.collider.gameObject);
+            }
+            ;
 
-            NotifyTarget(hit.collider.gameObject);
             SpawnImpact();
         }
 

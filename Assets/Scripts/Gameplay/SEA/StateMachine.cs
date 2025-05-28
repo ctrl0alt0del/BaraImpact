@@ -67,7 +67,7 @@ namespace SEA.State
 
             _stateMap[ns] = newState;
 
-            Debug.Log($"StateMachine → [{Format(ns, newState)}]");
+            Debug.Log($"StateMachine({gameObject}) → [{Format(ns, newState)}]");
 
             GlobalEventBus.Publish(new EnterEvent(gameObject, Format(ns, newState), payload));
         }

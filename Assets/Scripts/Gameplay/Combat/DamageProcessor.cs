@@ -46,13 +46,20 @@ namespace Game.Combat
             if (evt.Target != gameObject) return;                // not my object
 
             // React only to listed states
+            var damageReceived = false;
             for (int i = 0; i < damagingStates.Length; i++)
             {
                 if (evt.State != damagingStates[i]) continue;
 
                 float dmg = ExtractDamage(evt);
                 ApplyDamage(dmg);
+                damageReceived = true;
                 break;
+            }
+
+            if (damageReceived)
+            {
+                MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.CombatNone));
             }
         }
 

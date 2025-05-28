@@ -19,7 +19,7 @@ public class MutatorQueueRunner : MonoBehaviour
   }
 
   /// Called after all normal Update() calls → deterministic order.
-  void LateUpdate()
+  void Update()
   {
     MutatorQueue.Tick();                   // or .Process() / .Flush()
   }

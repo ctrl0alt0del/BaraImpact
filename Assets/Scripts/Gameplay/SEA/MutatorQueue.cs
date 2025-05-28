@@ -14,7 +14,10 @@ namespace SEA.Mutators
     /// enqueue a mutator (priority ≥1 goes to priority queue)
     public static void Enqueue(StateMutator m)
     {
-      if (m.Priority > 0) prio.Enqueue(m, -m.Priority); // min-heap
+        var sm = m.Target ? m.Target.GetComponent<StateMachine>() : null;
+        if (sm && sm.Current == m.ToState) return;
+
+            if (m.Priority > 0) prio.Enqueue(m, -m.Priority); // min-heap
       else fifo.Enqueue(m);
     }
 

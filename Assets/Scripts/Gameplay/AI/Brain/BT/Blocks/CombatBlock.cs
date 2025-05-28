@@ -29,12 +29,15 @@ public class CombatBTBlock : ScriptableBTBlock
                 var abilityComponent = ctx.Owner.GetComponent<AbilityComponent>();
                 var abilitySystem = ctx.Owner.GetComponent<AbilitySystemBehaviour>();
                 var nav = ctx.Owner.GetComponent<UnityEngine.AI.NavMeshAgent>();
+                var targetPositionKnown = ctx.Target != null || ctx.LastKnownTargetPosition != Vector3.zero;
 
-                if (abilityComponent == null || abilitySystem == null)
+                if (abilityComponent == null || abilitySystem == null || !targetPositionKnown)
                     return TaskStatus.Failure;
-
                 var target = ctx.Target;
-                float dist = Vector3.Distance(ctx.Owner.transform.position, target.transform.position);
+                var targetPosition = target != null ? target.transform.position : ctx.LastKnownTargetPosition;
+
+                RotateTowardTarget(ctx.Owner, targetPosition);
+                float dist = Vector3.Distance(ctx.Owner.transform.position, targetPosition);
 
                 foreach (var slot in priorityOrder)
                 {
@@ -50,18 +53,15 @@ public class CombatBTBlock : ScriptableBTBlock
 
                     if (dist <= range)
                     {
-                        if (abilityComponent.EnqueueAbility(ability))
-                        {
-                            Debug.Log($"AI: Using {slot} ability");
-                            return TaskStatus.Success;
-                        }
+                        abilityComponent.EnqueueAbility(ability);
+                        return TaskStatus.Continue;
                     }
                     else
                     {
                         Debug.Log($"AI: Moving to target for {slot} ability");
                         if (nav != null && nav.enabled)
                         {
-                            nav.SetDestination(target.transform.position);
+                            nav.SetDestination(targetPosition);
                             return TaskStatus.Continue;
                         }
                     }
@@ -69,5 +69,20 @@ public class CombatBTBlock : ScriptableBTBlock
 
                 return TaskStatus.Failure;
             });
+
+    }
+    private void RotateTowardTarget(GameObject owner, Vector3 targetPosition, float rotationSpeed = 8f)
+    {
+        Vector3 direction = (targetPosition - owner.transform.position).normalized;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude < 0.001f) return;
+
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+        owner.transform.rotation = Quaternion.Slerp(
+            owner.transform.rotation,
+            lookRotation,
+            Time.deltaTime * rotationSpeed
+        );
     }
 }

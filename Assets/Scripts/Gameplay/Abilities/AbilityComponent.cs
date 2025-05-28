@@ -19,6 +19,7 @@ public class AbilityComponent : MonoBehaviour
 {
   [SerializeField] AbilitySO[] grantedAbilities;
   [SerializeField] GameplayEffectSO walkOnlyEffect;
+  [SerializeField] private bool reactToInputEvents = false;
 
   AbilitySystemBehaviour asc;
   IEffectApplier effects;
@@ -50,12 +51,12 @@ public class AbilityComponent : MonoBehaviour
 
   void OnEnter(EnterEvent e)
   {
-    if (IsInputEvent(e)) { HandleInput(e); return; }
+      if (IsInputEvent(e)) { HandleInput(e); return; }
 
-    if (e.Target != gameObject) return;
+      if (e.Target != gameObject) return;
 
-    if (e.State == UnitStates.CostPayment)
-      PayAndPushWindup();
+      if (e.State == UnitStates.CostPayment)
+        PayAndPushWindup();
   }
 
   void OnExit(ExitEvent e)
@@ -67,7 +68,7 @@ public class AbilityComponent : MonoBehaviour
 
   bool IsInputEvent(EnterEvent e) =>
       InputStateMachineBootstrap.Instance &&
-      e.Target == InputStateMachineBootstrap.Instance.gameObject;
+      e.Target == InputStateMachineBootstrap.Instance.gameObject && reactToInputEvents;
 
   void HandleInput(EnterEvent e)
   {
@@ -107,6 +108,7 @@ public class AbilityComponent : MonoBehaviour
   }
   void EndMoveCap()
   {
+      Debug.Log("Exiting AbilityRecover");
     if (moveCap != null)
     {
       effects.Remove(moveCap);
