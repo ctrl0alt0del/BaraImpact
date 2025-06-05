@@ -113,32 +113,36 @@ namespace Game.Abilities
 
         IEnumerator Active()
         {
-            /* ─ Spawn gameplay hitbox / projectile ─ */
-            if (current is IAbilityDeliveryData d)
-                spawner.Spawn(d, transform);
-
-            /* ─ Spawn paired VFX ─ */
             if (activeVfxSpec && activeVfxSpec.Prefab)
             {
-                // we need a handle to despawn later → manual instantiate
                 Transform root = transform;
                 if (!string.IsNullOrEmpty(activeVfxSpec.Bone))
                 {
                     var t = root.Find(activeVfxSpec.Bone) ??
-                            root.GetComponent<Animator>()?.GetBoneTransformByName(activeVfxSpec.Bone);
+                            root.GetComponent<Animator>()
+                                ?.GetBoneTransformByName(activeVfxSpec.Bone);
                     if (t) root = t;
                 }
 
                 Vector3 pos = root.TransformPoint(activeVfxSpec.PositionOffset);
-                Quaternion rot = root.rotation * Quaternion.Euler(activeVfxSpec.RotationOffset);
-                spawnedVfxGO = Instantiate(activeVfxSpec.Prefab, pos, rot,
-                                activeVfxSpec.ParentToBone ? root : null);
+                Quaternion rot = root.rotation *
+                                 Quaternion.Euler(activeVfxSpec.RotationOffset);
+
+                spawnedVfxGO = Instantiate(
+                    activeVfxSpec.Prefab,
+                    pos, rot,
+                    activeVfxSpec.ParentToBone ? root : null);
 
                 if (activeVfxSpec.OneShotSfx)
-                    AudioSource.PlayClipAtPoint(activeVfxSpec.OneShotSfx, pos, activeVfxSpec.Volume);
+                    AudioSource.PlayClipAtPoint(
+                        activeVfxSpec.OneShotSfx,
+                        pos, activeVfxSpec.Volume);
             }
+            var exec = AbilityStrategyFactory.Create(current);
+            exec.Begin(gameObject, current);
 
-            yield return new WaitForSeconds(current.ActiveTime);
+            while (exec.Tick(Time.fixedDeltaTime))
+                yield return new WaitForFixedUpdate();
 
             /*  Despawn VFX if still alive and parented outside pooled system */
             if (spawnedVfxGO) Destroy(spawnedVfxGO);
