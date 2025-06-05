@@ -45,7 +45,7 @@ namespace Microlight.MicroBar
         internal Color BarAdaptiveColor => _barAdaptiveColor;
 
         // Ghost bar
-        [SerializeField] bool _useGhostBar = true;   // Is ghost bar used
+        [SerializeField] bool _useGhostBar = true;   // IsInState ghost bar used
         internal bool UseGhostBar => IsAnimated && _useGhostBar;
         [SerializeField] bool _dualGhostBars = false;   // Are ghost bars two separate bars for healing and damaging or single bar for both
         internal bool DualGhostBars => UseGhostBar && _dualGhostBars;

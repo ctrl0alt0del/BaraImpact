@@ -333,7 +333,7 @@ namespace Microlight.MicroBar
                         position.y + MicroEditor_Utility.VerticalSpacing,
                         position.width,
                         MicroEditor_Utility.LineHeight * 2);
-                EditorGUI.HelpBox(elementRect, "Your animation commands don't have a fill command. Is that intended behaviour?", MessageType.Warning);
+                EditorGUI.HelpBox(elementRect, "Your animation commands don't have a fill command. IsInState that intended behaviour?", MessageType.Warning);
 
                 return new Rect(
                     position.x,

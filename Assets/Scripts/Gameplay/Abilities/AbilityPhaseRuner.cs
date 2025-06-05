@@ -9,16 +9,18 @@ using Game.States;
 using Game.Combat;
 using SEA.State;
 using Game.Vfx;
+using Game.Visuals;
 
 namespace Game.Abilities
 {
-    [RequireComponent(typeof(Animator), typeof(DeliverySpawner))]
+    [RequireComponent(typeof(DeliverySpawner))]
     public class AbilityPhaseRunner : MonoBehaviour
     {
         const string AnimSpeed = "AbilitySpeedMul";
 
         /* ───────── FIELDS ───────── */
-        Animator anim;
+        IAnimatorSource animSrc;                 // NEW
+        Animator Anim => animSrc?.Animator;
         DeliverySpawner spawner;
 
         IGameplayAbilityData current;
@@ -42,10 +44,10 @@ namespace Game.Abilities
         /* ───────── SETUP ───────── */
         void Awake()
         {
-            anim = GetComponent<Animator>();
+            animSrc = GetComponentInChildren<IAnimatorSource>(true);
             spawner = GetComponent<DeliverySpawner>();
 
-            baseCtrl = anim.runtimeAnimatorController;
+            baseCtrl = Anim.runtimeAnimatorController;
             aoc = new AnimatorOverrideController(baseCtrl);
 
             foreach (var pair in aoc.clips)
@@ -97,11 +99,11 @@ namespace Game.Abilities
             if (activeClip && current.TotalTime > 0f)
             {
                 aoc[placeholderClip] = activeClip;
-                anim.runtimeAnimatorController = aoc;
+                Anim.runtimeAnimatorController = aoc;
 
-                savedSpeed = anim.GetFloat(AnimSpeed);
-                anim.SetFloat(AnimSpeed, activeClip.length / current.TotalTime);
-                anim.CrossFade("Cast_Generic", 0.12f, 1);  // layer 0
+                savedSpeed = Anim.GetFloat(AnimSpeed);
+                Anim.SetFloat(AnimSpeed, activeClip.length / current.TotalTime);
+                Anim.CrossFade("Cast_Generic", 0.12f, 1);  // layer 0
             }
 
             yield return new WaitForSeconds(current.WindupTime);
@@ -148,8 +150,8 @@ namespace Game.Abilities
         {
             yield return new WaitForSeconds(current.RecoverTime);
 
-            anim.SetFloat(AnimSpeed, savedSpeed);
-            anim.runtimeAnimatorController = baseCtrl;
+            Anim.SetFloat(AnimSpeed, savedSpeed);
+            Anim.runtimeAnimatorController = baseCtrl;
 
             current = null;
             activeClip = null;

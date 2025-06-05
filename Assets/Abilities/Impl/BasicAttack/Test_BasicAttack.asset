@@ -46,7 +46,7 @@ MonoBehaviour:
   lockHalfAngle: 45
   lockRadius: 10
   turnRate: 720
-  targetPriority: 0300000001000000
+  targetPriority: 0400000002000000
   castVariants: {fileID: 11400000, guid: 31379b43808cde54bb3abec1120983a4, type: 2}
   references:
     version: 2

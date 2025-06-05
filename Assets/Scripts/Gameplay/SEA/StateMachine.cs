@@ -72,6 +72,12 @@ namespace SEA.State
             GlobalEventBus.Publish(new EnterEvent(gameObject, Format(ns, newState), payload));
         }
 
+        public bool IsInState(string fullState)
+        {
+            var (ns, stateName) = Parse(fullState);
+            return _stateMap.TryGetValue(ns, out var currentState) && currentState == stateName;
+        }
+
         private static string Format(string ns, string state)
         {
             return string.IsNullOrEmpty(ns) ? state : $"{ns}:{state}";

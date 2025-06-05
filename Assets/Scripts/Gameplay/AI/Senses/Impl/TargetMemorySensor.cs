@@ -34,6 +34,7 @@ public class TargetMemorySensor : ScriptableSensor
             else
             {
                 _cachedTarget = null;
+                context.LastKnownTargetPosition = Vector3.zero;
             }
         }
     }

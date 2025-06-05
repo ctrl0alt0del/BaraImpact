@@ -2,6 +2,7 @@ using UnityEngine;
 using Game.AI.Core;
 using Game.AI.Brain;
 using Game.AI.Definitions;
+using Game.AI.Interaction;
 using Game.AI.Senses;
 using SEA.State; // We'll put BT/GOAP brain classes here
 
@@ -16,6 +17,8 @@ namespace Game.AI.Core
         private AISensory _sensory;
         [SerializeField] private ScriptableAIBrainDefinition brainDefinition;
 
+        [SerializeField] private InteractionArea assignedArea;
+
         public AIContext Context => _context;
 
         void Awake()
@@ -29,7 +32,11 @@ namespace Game.AI.Core
                 CurrentHP = 100f, // Placeholder
                 MaxHP = 100f,
             };
+            if (!assignedArea)
+                assignedArea = GetComponentInParent<InteractionArea>();
 
+            _context.CurrentArea = assignedArea;
+            assignedArea?.RegisterNpc(gameObject);
             _brain = brainDefinition?.CreateBrain(_context);
         }
 

@@ -1,10 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Game.AI.BT;
 using Game.AI.Core;
 using CleverCrow.Fluid.BTs.Trees;
 using CleverCrow.Fluid.BTs.Tasks;
 using H2V.GameplayAbilitySystem.AbilitySystem.Components;
 using Game.Abilities;
+using Game.States;
+using SEA.Mutators;
 
 [CreateAssetMenu(menuName = "AI/BT Blocks/Combat Block")]
 public class CombatBTBlock : ScriptableBTBlock
@@ -23,16 +25,32 @@ public class CombatBTBlock : ScriptableBTBlock
     public override void ApplyToTree(BehaviorTreeBuilder builder, AIContext ctx)
     {
         builder.Sequence("Combat Block")
-            .Condition("Has Target", () => ctx.Target != null)
+            .Condition("Has Target or LastKnownPos", () =>
+                ctx.Target != null || ctx.LastKnownTargetPosition != Vector3.zero)
+            .Do("Enter Combat", () =>
+            {
+                MutatorQueue.Enqueue(new StateMutator(ctx.Owner, MetaStates.Combat));
+                return TaskStatus.Success;
+            })
             .Do("Select + Enqueue Ability or Move", () =>
             {
                 var abilityComponent = ctx.Owner.GetComponent<AbilityComponent>();
                 var abilitySystem = ctx.Owner.GetComponent<AbilitySystemBehaviour>();
                 var nav = ctx.Owner.GetComponent<UnityEngine.AI.NavMeshAgent>();
-                var targetPositionKnown = ctx.Target != null || ctx.LastKnownTargetPosition != Vector3.zero;
 
-                if (abilityComponent == null || abilitySystem == null || !targetPositionKnown)
+                if (abilityComponent == null || abilitySystem == null)
                     return TaskStatus.Failure;
+
+                // ✅ Exit if player is completely gone
+                bool targetLost = ctx.Target == null && ctx.LastKnownTargetPosition == Vector3.zero;
+                if (targetLost)
+                {
+                    ctx.clearInteractionPoint();
+                    ctx.LastKnownTargetPosition = Vector3.zero;
+                    MutatorQueue.Enqueue(new StateMutator(ctx.Owner, MetaStates.Idle));
+                    return TaskStatus.Failure;
+                }
+
                 var target = ctx.Target;
                 var targetPosition = target != null ? target.transform.position : ctx.LastKnownTargetPosition;
 
@@ -58,7 +76,6 @@ public class CombatBTBlock : ScriptableBTBlock
                     }
                     else
                     {
-                        Debug.Log($"AI: Moving to target for {slot} ability");
                         if (nav != null && nav.enabled)
                         {
                             nav.SetDestination(targetPosition);
@@ -68,7 +85,8 @@ public class CombatBTBlock : ScriptableBTBlock
                 }
 
                 return TaskStatus.Failure;
-            });
+            })
+            .End();
 
     }
     private void RotateTowardTarget(GameObject owner, Vector3 targetPosition, float rotationSpeed = 8f)

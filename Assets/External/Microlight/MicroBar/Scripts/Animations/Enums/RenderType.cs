@@ -1,7 +1,7 @@
 namespace Microlight.MicroBar
 {
     // ****************************************************************************************************
-    // Is the animation of 'Image' or 'Sprite' type
+    // IsInState the animation of 'Image' or 'Sprite' type
     // ****************************************************************************************************
 
     public enum RenderType

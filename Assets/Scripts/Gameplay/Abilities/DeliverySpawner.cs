@@ -5,14 +5,12 @@ using UnityEngine;
 using Game.Abilities;
 using Game.Combat;
 using Game.Vfx;
+using Game.Visuals;
 
 namespace Game.Combat
 {
-    [RequireComponent(typeof(Animator))]
     public class DeliverySpawner : MonoBehaviour
     {
-        Animator anim;
-        void Awake() => anim = GetComponent<Animator>();
 
         public void Spawn(IAbilityDeliveryData data, Transform caster)
         {
@@ -76,12 +74,16 @@ namespace Game.Combat
             Vector3 baseDir = caster.forward;
             Vector3 basePos = caster.position + Vector3.up * fallbackHeight + baseDir * fwdOffset;
 
-            if (data is not IHasSpawnOrigin origin ||
-                string.IsNullOrEmpty(origin.SpawnBone))
+            if (data is not IHasSpawnOrigin origin || string.IsNullOrEmpty(origin.SpawnBone))
                 return (basePos, baseDir);
 
-            Transform bone = caster.GetComponent<Animator>()?.GetBoneTransformByName(origin.SpawnBone)
-                            ?? caster.Find(origin.SpawnBone);
+            /* Try IAnimatorSource first (works whether Animator is on root or child) */
+            Transform bone = null;
+            var src = caster.GetComponentInChildren<IAnimatorSource>(true);
+            if (src != null) bone = src.GetBone(origin.SpawnBone);
+
+            /* Fallback: simple Transform.Find() */
+            bone ??= caster.Find(origin.SpawnBone);
 
             if (!bone) return (basePos, baseDir);
 
