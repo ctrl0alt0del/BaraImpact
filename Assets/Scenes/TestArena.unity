@@ -515,7 +515,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 205174648}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a44fac3444b83e4aba0c47f0c7ef3df, type: 3}
   m_Name: 
@@ -614,6 +614,10 @@ MonoBehaviour:
         - Attribute: {fileID: 11400000, guid: c39e7520002cdaf4bb63666b894e8191, type: 2}
           Value: 4
         - Attribute: {fileID: 11400000, guid: d0859770d4ec480498da2a7cde05002e, type: 2}
+          Value: 2
+        - Attribute: {fileID: 11400000, guid: d0504ec89a429754b9107b74d380f9d4, type: 2}
+          Value: 2
+        - Attribute: {fileID: 11400000, guid: 32c5f52923a23ec41a9e776dc932248a, type: 2}
           Value: 2
 --- !u!114 &205174667
 MonoBehaviour:
@@ -1282,7 +1286,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.003445
+  field of view: 60.00343
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1309,7 +1313,7 @@ Transform:
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15212338, y: 0, z: 0, w: 0.98836154}
-  m_LocalPosition: {x: 0, y: 3.453001, z: -5.8769684}
+  m_LocalPosition: {x: 0, y: 2.6416023, z: -3.3035402}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1407,9 +1411,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8675154197177349708, guid: d33cb4cbc79da4b4fb64e4619580a5fd, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d33cb4cbc79da4b4fb64e4619580a5fd, type: 3}
       propertyPath: m_Name
       value: Hanzo_003
+      objectReference: {fileID: 0}
+    - target: {fileID: 3703352683663789303, guid: d33cb4cbc79da4b4fb64e4619580a5fd, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7926839288223873370, guid: d33cb4cbc79da4b4fb64e4619580a5fd, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8417361359673230750, guid: d33cb4cbc79da4b4fb64e4619580a5fd, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1819,6 +1839,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grantedAbilities:
   - {fileID: 11400000, guid: 0e7815a5e80a09444abd78912cdd1e95, type: 2}
+  - {fileID: 11400000, guid: a010167b9dcaefd468e6f227a1a89314, type: 2}
+  - {fileID: 11400000, guid: 2bb4605b648b9fc40bab3d0ba997dd4d, type: 2}
   walkOnlyEffect: {fileID: 11400000, guid: fa47d172abe01a94a926a941a64ee094, type: 2}
   reactToInputEvents: 1
 --- !u!114 &1683201458
@@ -3589,9 +3611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e54e5a728a9234ab24fcf1460ed8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeedAttr: {fileID: 11400000, guid: d0859770d4ec480498da2a7cde05002e, type: 2}
-  jogSpeedAttr: {fileID: 11400000, guid: c39e7520002cdaf4bb63666b894e8191, type: 2}
-  sprintSpeedAttr: {fileID: 11400000, guid: f54f81548a99a9e4d98576d05b18b194, type: 2}
+  currentMotionSpeedAttr: {fileID: 11400000, guid: 4b08b2e8f5fc7c34d8940de2ac68a1c4, type: 2}
   RotationSmoothTime: 0.12
   SpeedChangeRate: 10
   LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
@@ -3680,6 +3700,7 @@ GameObject:
   - component: {fileID: 6982812147307579067}
   - component: {fileID: 6982812147307579068}
   - component: {fileID: 6982812147307579069}
+  - component: {fileID: 6982812147307579070}
   m_Layer: 8
   m_Name: CustomPlayer
   m_TagString: Player
@@ -4275,6 +4296,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bb6e276a8a692a94ab744f9749ec42e5, type: 2}
   - {fileID: 11400000, guid: 32c5f52923a23ec41a9e776dc932248a, type: 2}
   - {fileID: 11400000, guid: d0504ec89a429754b9107b74d380f9d4, type: 2}
+  - {fileID: 11400000, guid: 4b08b2e8f5fc7c34d8940de2ac68a1c4, type: 2}
+  - {fileID: 11400000, guid: f32c5e4f1e59e6f4aa188ff63419facd, type: 2}
+  - {fileID: 11400000, guid: 68080d805768a974793e48f550e33c8f, type: 2}
+  - {fileID: 11400000, guid: 675597009541da242b43c27a88361275, type: 2}
+  - {fileID: 11400000, guid: ea99d1a289ceee24f93c0e7c8f033f42, type: 2}
   _attributeValues: []
 --- !u!114 &6982812147307579057
 MonoBehaviour:
@@ -4309,6 +4335,20 @@ MonoBehaviour:
           Value: 5
         - Attribute: {fileID: 11400000, guid: bb6e276a8a692a94ab744f9749ec42e5, type: 2}
           Value: 100
+        - Attribute: {fileID: 11400000, guid: 4b08b2e8f5fc7c34d8940de2ac68a1c4, type: 2}
+          Value: 0
+        - Attribute: {fileID: 11400000, guid: d0504ec89a429754b9107b74d380f9d4, type: 2}
+          Value: 0
+        - Attribute: {fileID: 11400000, guid: 32c5f52923a23ec41a9e776dc932248a, type: 2}
+          Value: 0
+        - Attribute: {fileID: 11400000, guid: f32c5e4f1e59e6f4aa188ff63419facd, type: 2}
+          Value: 5
+        - Attribute: {fileID: 11400000, guid: 68080d805768a974793e48f550e33c8f, type: 2}
+          Value: 30
+        - Attribute: {fileID: 11400000, guid: 675597009541da242b43c27a88361275, type: 2}
+          Value: 0
+        - Attribute: {fileID: 11400000, guid: ea99d1a289ceee24f93c0e7c8f033f42, type: 2}
+          Value: 0
 --- !u!114 &6982812147307579058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4462,6 +4502,18 @@ MonoBehaviour:
   footstepClips: []
   landClip: {fileID: 0}
   volume: 0.5
+--- !u!114 &6982812147307579070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926082897315439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7af39e1e9517094eb07cdf1c4341d2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6983258930950323830
 Transform:
   m_ObjectHideFlags: 0

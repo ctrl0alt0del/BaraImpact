@@ -5,7 +5,8 @@ namespace Game.Abilities
   {
     BasicAttack,
     Skill,
-    Burst
+    Burst,
+    Sprint,
 
   }
 }

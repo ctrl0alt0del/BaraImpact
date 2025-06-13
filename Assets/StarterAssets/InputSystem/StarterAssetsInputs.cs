@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -43,8 +43,19 @@ namespace StarterAssets
 
 		public void OnSprint(InputValue value)
 		{
-			SprintInput(value.isPressed);
-		}
+            sprint = value.isPressed;
+
+            if (InputStateMachineBootstrap.Instance == null) return;
+
+            string state = value.isPressed
+                          ? Game.States.InputStates.SprintPress
+                          : Game.States.InputStates.SprintRelease;   // ← release too
+
+            SEA.Mutators.MutatorQueue.Enqueue(
+                new SEA.Mutators.StateMutator(
+                    InputStateMachineBootstrap.Instance.gameObject,
+                    state));
+        }
 
 		public void OnWalk(InputValue value)
 		{

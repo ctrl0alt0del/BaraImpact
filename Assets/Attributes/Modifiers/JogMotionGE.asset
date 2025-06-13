@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bffd989f578481342b953360f84c5b93, type: 3}
+  m_Name: JogMotionGE
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: 
+  <EffectTag>k__BackingField: {fileID: 0}
+  <Policy>k__BackingField:
+    rid: 2078325598739497045
+  <EffectDetails>k__BackingField:
+    Modifiers:
+    - Attribute: {fileID: 11400000, guid: 4b08b2e8f5fc7c34d8940de2ac68a1c4, type: 2}
+      OperationType: 3
+      ModifierMagnitude: {fileID: 11400000, guid: c6e96f64c9e65cb40a365aeefddf519e, type: 2}
+      Value: 0
+    StackingType: 1
+  <AdditionApplyEffects>k__BackingField: []
+  <CustomExecutions>k__BackingField: []
+  <ApplicationConditions>k__BackingField: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2078325598739497045
+      type: {class: InfinitePolicy, ns: H2V.GameplayAbilitySystem.EffectSystem.GamplayEffectPolicies, asm: H2V.GameplayAbilitySystem}
+      data:
+        <StackPerActive>k__BackingField: 1
+        <ReduceStackStrategy>k__BackingField:
+          rid: 2078325598739497046
+    - rid: 2078325598739497046
+      type: {class: ReduceSingleStack, ns: H2V.GameplayAbilitySystem.EffectSystem.GamplayEffectPolicies, asm: H2V.GameplayAbilitySystem}
+      data: 

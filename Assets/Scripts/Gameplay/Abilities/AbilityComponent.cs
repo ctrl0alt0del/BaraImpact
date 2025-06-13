@@ -11,6 +11,7 @@ using H2V.GameplayAbilitySystem.EffectSystem.ScriptableObjects;
 using H2V.GameplayAbilitySystem.EffectSystem;
 using Game.States;
 using Game.Abilities;
+using H2V.GameplayAbilitySystem.Components;
 
 [RequireComponent(typeof(StateMachine),
                   typeof(AbilityPhaseRunner),
@@ -35,16 +36,22 @@ public class AbilityComponent : MonoBehaviour
     phase = GetComponent<AbilityPhaseRunner>();
     effects = GetComponent<IEffectApplier>();
 
+    GetComponent<AbilitySystemComponent>().Init();
+
     foreach (var so in grantedAbilities)
-      if (so is IGameplayAbilityData d)
-      {
+    {
         asc.GiveAbility(so);
-        slotMap[d.Slot] = d;
-      }
+
+        if (so is IGameplayAbilityData d)
+        {
+            slotMap[d.Slot] = d;
+        }
+    }
 
     GlobalEventBus.Subscribe<EnterEvent>(OnEnter);
     GlobalEventBus.Subscribe<ExitEvent>(OnExit);
   }
+
 
   void OnDestroy() =>
       GlobalEventBus.Unsubscribe<EnterEvent>(OnEnter);
@@ -75,7 +82,14 @@ public class AbilityComponent : MonoBehaviour
     var slot = ToSlot(e.State);
     if (!slot.HasValue) return;
     if (!slotMap.TryGetValue(slot.Value, out var a)) return;
-    EnqueueAbility(a);
+    if (e.State == InputStates.SprintRelease &&
+        phase.Current is IChannelledAbilityData)
+    {
+        // force the phase runner out of Active immediately
+        MutatorQueue.Enqueue(new StateMutator(gameObject, UnitStates.AbilityRecover));
+        return;
+    }
+        EnqueueAbility(a);
     }
 
   static AbilitySlot? ToSlot(string s) => s switch
@@ -83,7 +97,8 @@ public class AbilityComponent : MonoBehaviour
     InputStates.BasicAttack => AbilitySlot.BasicAttack,
     InputStates.Skill => AbilitySlot.Skill,
     InputStates.Burst => AbilitySlot.Burst,
-    _ => null
+    InputStates.SprintPress => AbilitySlot.Sprint,
+      _ => null
   };
 
   void PayAndPushWindup()

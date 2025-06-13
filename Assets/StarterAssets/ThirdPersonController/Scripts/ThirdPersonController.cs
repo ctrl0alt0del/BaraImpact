@@ -18,10 +18,8 @@ namespace StarterAssets
     public class ThirdPersonController : MonoBehaviour
     {
         [Header("Player")]
-        [Header("Speed AttributeSOs")]
-        public AttributeSO walkSpeedAttr;
-        public AttributeSO jogSpeedAttr;
-        public AttributeSO sprintSpeedAttr;
+        [Header("Speed Attribute")]
+        public AttributeSO currentMotionSpeedAttr;
 
         [Tooltip("How fast the character turns to face movement direction")]
         [Range(0.0f, 0.3f)]
@@ -133,10 +131,6 @@ namespace StarterAssets
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
-
-            Debug.Assert(walkSpeedAttr != null, $"WalkSpeed attr missing on {name}");
-            Debug.Assert(jogSpeedAttr, $"JogSpeed attr missing on {name}");
-            Debug.Assert(sprintSpeedAttr, $"SprintSpeed attr missing on {name}");
         }
 
         private void Start()
@@ -394,19 +388,11 @@ namespace StarterAssets
 
         private float ResolveTargetSpeed()
         {
-
-            if (_input.sprint && asc.TryGetAttributeValue(sprintSpeedAttr, out AttributeValue sprint))
-                return sprint.CurrentValue;
-
-            if (_input.walk && asc.TryGetAttributeValue(walkSpeedAttr, out AttributeValue walk))
-                return walk.CurrentValue;
-
             if (_input.move == Vector2.zero) return 0f;
+            if (asc &&
+                asc.TryGetAttributeValue(currentMotionSpeedAttr, out AttributeValue v))
+                return v.CurrentValue;
 
-            if (asc.TryGetAttributeValue(jogSpeedAttr, out AttributeValue jog))
-                return jog.CurrentValue;
-
-            // If attributes not yet installed, hard-fallback to sane default.
             return 0f;
         }
     }

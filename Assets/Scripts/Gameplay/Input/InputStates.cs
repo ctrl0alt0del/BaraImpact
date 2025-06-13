@@ -7,5 +7,7 @@ namespace Game.States
     public const string BasicAttack = "BasicAttack";
     public const string Skill = "Skill";
     public const string Burst = "Burst";
+    public const string SprintPress = "SprintPress";
+    public const string SprintRelease = "SprintRelease";
   }
 }

@@ -15,3 +15,5 @@ MonoBehaviour:
   variants:
   - Clip: {fileID: -203655887218126122, guid: 6cf344b6888641b42a9696ae5874e570, type: 3}
     Spec: {fileID: 0}
+    LayerName: UpperBody
+    StateName: Cast_Generic

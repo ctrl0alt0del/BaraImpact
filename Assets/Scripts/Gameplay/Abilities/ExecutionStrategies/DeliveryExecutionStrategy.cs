@@ -5,9 +5,9 @@ namespace Game.Abilities
 {
     public abstract class DeliveryExecutionStrategy : BaseExecutionStrategy
     {
-        public override void Begin(GameObject owner, IGameplayAbilityData data)
+        public override void BeginActive(GameObject owner, IGameplayAbilityData data)
         {
-            base.Begin(owner, data);
+            base.BeginActive(owner, data);
 
             if (data is IAbilityDeliveryData delivery)
             {

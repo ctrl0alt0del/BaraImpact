@@ -12,6 +12,13 @@ namespace Game.Vfx
         {
             public AnimationClip Clip;
             public VfxSpawnSpec Spec;
+
+            [Tooltip("Animator layer to play this clip on (leave blank ⇒ \"UpperBody\").")]
+            public string LayerName;      // NEW  (e.g. \"Base\" / \"UpperBody\")
+
+            [Tooltip("Animator state you mapped the placeholder to "
+                   + "(leave blank ⇒ \"Cast_Generic\").")]
+            public string StateName;      // NEW  (default placeholder)
         }
 
         [SerializeField] Entry[] variants;
@@ -30,16 +37,13 @@ namespace Game.Vfx
         }
 
         /// <summary>Round-robin: returns next (Clip,Spec) pair each call.</summary>
-        public bool GetNext(out AnimationClip clip, out VfxSpawnSpec spec)
+        public bool GetNext(out Entry entry)
         {
             if (variants == null || variants.Length == 0)
-            {
-                clip = null; spec = null; return false;
-            }
+            { entry = default; return false; }
 
             cursor = (cursor + 1) % variants.Length;
-            clip = variants[cursor].Clip;
-            spec = variants[cursor].Spec;
+            entry = variants[cursor];
             return true;
         }
     }

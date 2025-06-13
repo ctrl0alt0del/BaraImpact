@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: TestCapsuleAttackVFXSpec
   m_EditorClassIdentifier: 
   Prefab: {fileID: 2680830935764052329, guid: 76957001530c8dc468c5e53bf3becd6d, type: 3}
-  Bone: 
-  ParentToBone: 1
-  PositionOffset: {x: 0, y: 0, z: 1}
-  RotationOffset: {x: 0, y: 0, z: 0}
+  Attachments:
+  - Bone: Hips
+    PositionOffset: {x: 0, y: 0, z: 1}
+    RotationOffset: {x: 0, y: 0, z: 0}
+    ParentToBone: 1
   OneShotSfx: {fileID: 0}
   Volume: 1
