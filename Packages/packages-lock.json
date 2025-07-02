@@ -31,6 +31,16 @@
       "dependencies": {},
       "hash": "f938fc5d9a9ef46a1669289450d38e17cb39567c"
     },
+    "com.singtaa.onejs": {
+      "version": "https://github.com/Singtaa/OneJS.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.mathematics": "1.2.6",
+        "com.unity.burst": "1.8.4"
+      },
+      "hash": "5c44cbbcec04387fd4d65416164d2cd777575e56"
+    },
     "com.unity.addressables": {
       "version": "2.4.3",
       "depth": 1,

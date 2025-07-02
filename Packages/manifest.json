@@ -3,14 +3,17 @@
     {
       "name": "NPM",
       "url": "https://registry.npmjs.org",
-      "scopes": ["com.fluid"]
+      "scopes": [
+        "com.fluid"
+      ]
     }
   ],
   "dependencies": {
-    "com.fluid.behavior-tree": "2.2.0",
     "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+    "com.fluid.behavior-tree": "2.2.0",
     "com.h2v.extensions-core": "https://github.com/h2v9696/UnityExtensionsCore.git",
     "com.mackysoft.serializereference-extensions": "https://github.com/mackysoft/Unity-SerializeReferenceExtensions.git?path=Assets/MackySoft/MackySoft.SerializeReferenceExtensions",
+    "com.singtaa.onejs": "https://github.com/Singtaa/OneJS.git",
     "com.unity.ai.navigation": "2.0.7",
     "com.unity.burst": "1.8.21",
     "com.unity.cinemachine": "3.1.3",
